@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, Platform } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
+import config from "./config";
 
-// Client IDs for different platforms
-const IOS_CLIENT_ID = "336598290180-e89eo7pqbfs7ilj3hjpj1fvr661cdnn2.apps.googleusercontent.com";
-const ANDROID_CLIENT_ID = "336598290180-muluv6q3m2rj5c3gkntuk39575kmnq0k.apps.googleusercontent.com";
-const WEB_CLIENT_ID = "336598290180-hoke507u1234s12j6uupf87ntt389e8h.apps.googleusercontent.com";
+console.log("App.js - Imported config:", config);
 
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
@@ -18,12 +16,22 @@ export default function App() {
   const configureGoogleSignIn = async () => {
     try {
       console.log("Configuring Google Sign-In...");
-      await GoogleSignin.configure({
-        iosClientId: IOS_CLIENT_ID,
-        androidClientId: ANDROID_CLIENT_ID,
-        webClientId: WEB_CLIENT_ID,
-        offlineAccess: true,
+      console.log("Using client IDs:", {
+        ios: config.googleClientIds.ios,
+        android: config.googleClientIds.android,
+        web: config.googleClientIds.web,
       });
+      console.log("Using URL scheme:", config.googleURLScheme);
+
+      const googleConfig = {
+        iosClientId: config.googleClientIds.ios,
+        androidClientId: config.googleClientIds.android,
+        webClientId: config.googleClientIds.web,
+        offlineAccess: true,
+      };
+      console.log("Google Sign-In configuration:", googleConfig);
+
+      await GoogleSignin.configure(googleConfig);
       console.log("Google Sign-In configured successfully");
 
       // Check if a user is already signed in
@@ -35,6 +43,11 @@ export default function App() {
       }
     } catch (error) {
       console.error("Google Sign-In configuration error:", error);
+      console.error("Error details:", {
+        code: error.code,
+        message: error.message,
+        stack: error.stack,
+      });
       setError(error.message);
     }
   };

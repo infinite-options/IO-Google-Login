@@ -8,7 +8,10 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "env": {
+          "GOOGLE_URL_SCHEME": "com.googleusercontent.apps.336598290180-e89eo7pqbfs7ilj3hjpj1fvr661cdnn2"
+        }
       }
     },
     "preview": {
