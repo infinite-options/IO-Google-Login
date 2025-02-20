@@ -7,6 +7,7 @@ const ENV = {
   WEB_CLIENT_ID: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
   BUNDLE_IDENTIFIER: "com.infiniteoptions.googleauthdemo", // From app.json ios.bundleIdentifier
   GOOGLE_URL_SCHEME: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
+  GOOGLE_MAPS_API_KEY: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
 };
 console.log("Environment variables loaded:", ENV);
 
@@ -21,6 +22,9 @@ if (!ENV.WEB_CLIENT_ID) {
 }
 if (!ENV.GOOGLE_URL_SCHEME) {
   console.error("ERROR: EXPO_PUBLIC_GOOGLE_URL_SCHEME is not defined in .env file");
+}
+if (!ENV.GOOGLE_MAPS_API_KEY) {
+  console.error("ERROR: EXPO_PUBLIC_GOOGLE_MAPS_API_KEY is not defined in .env file");
 }
 
 const getGoogleClientId = () => ENV.IOS_CLIENT_ID || "";
@@ -45,6 +49,7 @@ const config = {
   },
   googleURLScheme: getGoogleURLScheme(),
   bundleIdentifier: ENV.BUNDLE_IDENTIFIER,
+  googleMapsApiKey: ENV.GOOGLE_MAPS_API_KEY,
 };
 
 console.log("Exporting config:", config);

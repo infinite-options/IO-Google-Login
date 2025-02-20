@@ -1,7 +1,9 @@
+import "./polyfills";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, Platform } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
+import MapScreen from "./screens/MapScreen";
 
 console.log("App.js - Imported config:", config);
 
@@ -103,17 +105,18 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Google Auth Demo</Text>
-
-      {error && <Text style={styles.error}>Error: {error}</Text>}
-
       {!userInfo ? (
-        <GoogleSigninButton style={styles.googleButton} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={signIn} />
+        <>
+          <Text style={styles.title}>Google Auth Demo</Text>
+          {error && <Text style={styles.error}>Error: {error}</Text>}
+          <GoogleSigninButton style={styles.googleButton} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={signIn} />
+        </>
       ) : (
-        <View style={styles.userInfo}>
-          <Text>Welcome {userInfo.user.name}</Text>
-          <Text>Email: {userInfo.user.email}</Text>
-          <Button title='Sign Out' onPress={signOut} />
+        <View style={styles.mainContainer}>
+          <View style={styles.header}>
+            <Text>Welcome {userInfo.user.name}</Text>
+          </View>
+          <MapScreen onLogout={signOut} />
         </View>
       )}
     </View>
@@ -144,5 +147,16 @@ const styles = StyleSheet.create({
   error: {
     color: "red",
     marginBottom: 20,
+  },
+  mainContainer: {
+    flex: 1,
+    width: "100%",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#fff",
   },
 });
