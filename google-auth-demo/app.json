@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "GoogleAuthDemo",
+    "slug": "google-auth-demo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.infiniteoptions.googleauthdemo",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["com.googleusercontent.apps.336598290180-e89eo7pqbfs7ilj3hjpj1fvr661cdnn2"],
+            "CFBundleURLName": "google"
+          }
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.infiniteoptions.googleauthdemo"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "googleauthdemo",
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.336598290180-e89eo7pqbfs7ilj3hjpj1fvr661cdnn2"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d4a2a545-5903-4bea-acab-e3d08eed24e2"
+      }
+    }
+  }
+}
