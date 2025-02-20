@@ -41,6 +41,8 @@ console.log("Bundle Identifier from app.json:", ENV.BUNDLE_IDENTIFIER);
 console.log("Expected app.json URL scheme:", ENV.BUNDLE_IDENTIFIER);
 console.log("Expected eas.json GOOGLE_URL_SCHEME:", getGoogleURLScheme());
 
+console.log("Loading Maps API key:", process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY);
+
 const config = {
   googleClientIds: {
     ios: ENV.IOS_CLIENT_ID,
@@ -58,5 +60,10 @@ console.log("1. app.json bundleIdentifier:", ENV.BUNDLE_IDENTIFIER);
 console.log("2. app.json CFBundleURLSchemes:", ENV.BUNDLE_IDENTIFIER);
 console.log("3. eas.json GOOGLE_URL_SCHEME:", getGoogleURLScheme());
 console.log("4. Info.plist CFBundleURLSchemes:", getGoogleURLScheme());
+
+console.log("Final Maps configuration:", {
+  apiKey: ENV.GOOGLE_MAPS_API_KEY,
+  bundleId: ENV.BUNDLE_IDENTIFIER,
+});
 
 export default config;

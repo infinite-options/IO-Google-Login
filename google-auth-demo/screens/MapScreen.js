@@ -22,6 +22,17 @@ export default function MapScreen({ onLogout }) {
   const [markerLocation, setMarkerLocation] = useState(DEFAULT_LOCATION);
   const mapRef = useRef(null);
 
+  const handleZoom = (zoomIn) => {
+    const newRegion = {
+      latitude: region.latitude,
+      longitude: region.longitude,
+      latitudeDelta: zoomIn ? region.latitudeDelta / 2 : region.latitudeDelta * 2,
+      longitudeDelta: zoomIn ? region.longitudeDelta / 2 : region.longitudeDelta * 2,
+    };
+    setRegion(newRegion);
+    mapRef.current?.animateToRegion(newRegion, 300);
+  };
+
   const handlePlaceSelected = (data, details = null) => {
     console.log("Place selected:", data.description);
     if (details) {
@@ -38,6 +49,14 @@ export default function MapScreen({ onLogout }) {
       // Animate map to new location
       mapRef.current?.animateToRegion(newLocation, 1000);
     }
+  };
+
+  const onMapError = (error) => {
+    console.error("Map loading error:", error);
+  };
+
+  const onMapReady = () => {
+    console.log("Map is ready");
   };
 
   return (
@@ -69,7 +88,7 @@ export default function MapScreen({ onLogout }) {
           nearbyPlacesAPI='GooglePlacesSearch'
           debounce={300}
         />
-        <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion}>
+        <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion} provider='google'>
           <Marker
             coordinate={{
               latitude: markerLocation.latitude,
@@ -77,6 +96,17 @@ export default function MapScreen({ onLogout }) {
             }}
           />
         </MapView>
+
+        {/* Zoom Controls */}
+        <View style={styles.zoomControls}>
+          <TouchableOpacity style={styles.zoomButton} onPress={() => handleZoom(true)}>
+            <Text style={styles.zoomButtonText}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.zoomButton} onPress={() => handleZoom(false)}>
+            <Text style={styles.zoomButtonText}>−</Text>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
@@ -149,5 +179,32 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  zoomControls: {
+    position: "absolute",
+    right: 16,
+    top: "50%",
+    backgroundColor: "transparent",
+    transform: [{ translateY: -50 }],
+  },
+  zoomButton: {
+    backgroundColor: "white",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  zoomButtonText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+    lineHeight: 28,
   },
 });
