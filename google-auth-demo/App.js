@@ -1,9 +1,10 @@
 import "./polyfills";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button, Platform } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
+import Constants from "expo-constants";
 
 console.log("App.js - Imported config:", config);
 
@@ -12,62 +13,41 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    configureGoogleSignIn();
+    const initialize = async () => {
+      try {
+        console.log("Configuring Google Sign-In...");
+        console.log("Environment:", __DEV__ ? "Development" : "Production");
+
+        console.log("Using client IDs:", {
+          ios: config.googleClientIds.ios,
+          android: config.googleClientIds.android,
+          web: config.googleClientIds.web,
+        });
+
+        console.log("Using URL scheme:", config.googleURLScheme);
+
+        const googleConfig = {
+          iosClientId: config.googleClientIds.ios,
+          androidClientId: config.googleClientIds.android,
+          webClientId: config.googleClientIds.web,
+          offlineAccess: true,
+        };
+        console.log("Google Sign-In configuration:", googleConfig);
+
+        await GoogleSignin.configure(googleConfig);
+        console.log("Google Sign-In configured successfully");
+
+        // Sign out any existing user on app start
+        await GoogleSignin.signOut();
+        setUserInfo(null);
+      } catch (error) {
+        console.error("Google Sign-In configuration error:", error);
+        setError(error.message);
+      }
+    };
+
+    initialize();
   }, []);
-
-  const configureGoogleSignIn = async () => {
-    try {
-      console.log("Configuring Google Sign-In...");
-      console.log("Using client IDs:", {
-        ios: config.googleClientIds.ios,
-        android: config.googleClientIds.android,
-        web: config.googleClientIds.web,
-      });
-      console.log("Using URL scheme:", config.googleURLScheme);
-
-      const googleConfig = {
-        iosClientId: config.googleClientIds.ios,
-        androidClientId: config.googleClientIds.android,
-        webClientId: config.googleClientIds.web,
-        offlineAccess: true,
-      };
-      console.log("Google Sign-In configuration:", googleConfig);
-
-      await GoogleSignin.configure(googleConfig);
-      console.log("Google Sign-In configured successfully");
-
-      // Check if a user is already signed in
-      const isSignedIn = await GoogleSignin.isSignedIn();
-      console.log("Is user signed in?", isSignedIn);
-
-      if (isSignedIn) {
-        getCurrentUserInfo();
-      }
-    } catch (error) {
-      console.error("Google Sign-In configuration error:", error);
-      console.error("Error details:", {
-        code: error.code,
-        message: error.message,
-        stack: error.stack,
-      });
-      setError(error.message);
-    }
-  };
-
-  const getCurrentUserInfo = async () => {
-    try {
-      console.log("Getting current user info...");
-      const userInfo = await GoogleSignin.signInSilently();
-      console.log("Current user info:", userInfo);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.error("Error getting current user:", error);
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        console.log("User needs to sign in");
-      }
-      setError(error.message);
-    }
-  };
 
   const signIn = async () => {
     try {
@@ -79,13 +59,6 @@ export default function App() {
       setError(null);
     } catch (error) {
       console.error("Sign-in error:", error);
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log("User cancelled sign-in");
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log("Sign-in already in progress");
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log("Play services not available");
-      }
       setError(error.message);
     }
   };
@@ -138,10 +111,6 @@ const styles = StyleSheet.create({
   googleButton: {
     width: 192,
     height: 48,
-    marginTop: 20,
-  },
-  userInfo: {
-    alignItems: "center",
     marginTop: 20,
   },
   error: {
