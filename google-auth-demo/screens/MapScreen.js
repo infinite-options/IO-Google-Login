@@ -51,14 +51,6 @@ export default function MapScreen({ onLogout }) {
     }
   };
 
-  const onMapError = (error) => {
-    console.error("Map loading error:", error);
-  };
-
-  const onMapReady = () => {
-    console.log("Map is ready");
-  };
-
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
       <View style={styles.container}>
@@ -88,7 +80,7 @@ export default function MapScreen({ onLogout }) {
           nearbyPlacesAPI='GooglePlacesSearch'
           debounce={300}
         />
-        <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion} provider='google'>
+        <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion}>
           <Marker
             coordinate={{
               latitude: markerLocation.latitude,
