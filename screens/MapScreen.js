@@ -30,26 +30,59 @@ export default function MapScreen({ onLogout }) {
       longitudeDelta: zoomIn ? region.longitudeDelta / 2 : region.longitudeDelta * 2,
     };
     setRegion(newRegion);
-    mapRef.current?.animateToRegion(newRegion, 300);
+    // mapRef.current?.animateToRegion(newRegion, 300);
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(newLocation, 1000);
+    }
   };
 
   const handlePlaceSelected = (data, details = null) => {
-    console.log("Place selected:", data.description);
-    if (details) {
-      console.log("Place details:", details);
-      const newLocation = {
-        latitude: details.geometry.location.lat,
-        longitude: details.geometry.location.lng,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      };
-      setRegion(newLocation);
-      setMarkerLocation(newLocation);
+    if (!details || !details.geometry || !details.geometry.location) return;
 
-      // Animate map to new location
-      mapRef.current?.animateToRegion(newLocation, 1000);
+    console.log("Place selected:", data.description);
+    console.log("Place details:", details);
+
+    const newLocation = {
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    };
+
+    // Prevent unnecessary updates
+    setRegion((prevRegion) => {
+      if (prevRegion.latitude === newLocation.latitude && prevRegion.longitude === newLocation.longitude) {
+        return prevRegion; // No update needed
+      }
+      return newLocation;
+    });
+
+    setMarkerLocation(newLocation);
+
+    // Animate map to new location only if necessary
+    // mapRef.current?.animateToRegion(newLocation, 1000);
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(newLocation, 1000);
     }
   };
+
+  // const handlePlaceSelected = (data, details = null) => {
+  //   console.log("Place selected:", data.description);
+  //   if (details) {
+  //     console.log("Place details:", details);
+  //     const newLocation = {
+  //       latitude: details.geometry.location.lat,
+  //       longitude: details.geometry.location.lng,
+  //       latitudeDelta: LATITUDE_DELTA,
+  //       longitudeDelta: LONGITUDE_DELTA,
+  //     };
+  //     setRegion(newLocation);
+  //     setMarkerLocation(newLocation);
+
+  //     // Animate map to new location
+  //     mapRef.current?.animateToRegion(newLocation, 1000);
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
