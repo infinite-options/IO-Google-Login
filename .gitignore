@@ -21,6 +21,14 @@ expo-env.d.ts
 ios/
 android/
 
+# Ignore all ios and android files with confidential info
+**/Info.plist
+**/gradle.properties
+**/strings.xml
+**/merger.xml
+**/values.xml
+**/AndroidManifest.xml
+
 # Metro
 .metro-health-check*
 
