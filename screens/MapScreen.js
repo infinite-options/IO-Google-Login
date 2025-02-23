@@ -17,12 +17,18 @@ const DEFAULT_LOCATION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
+console.log("Google Maps API Key being used:", config.googleMapsApiKey);
+console.log("Initializing GooglePlacesAutocomplete with API key:", config.googleMapsApiKey);
+
 export default function MapScreen({ onLogout }) {
+  const [isAutocompleteFocused, setAutocompleteFocused] = useState(false);
+  const lastTextRef = useRef("");
   const [region, setRegion] = useState(DEFAULT_LOCATION);
   const [markerLocation, setMarkerLocation] = useState(DEFAULT_LOCATION);
   const mapRef = useRef(null);
 
   const handleZoom = (zoomIn) => {
+    // console.log("handleZoom called with zoomIn:", zoomIn);
     const newRegion = {
       latitude: region.latitude,
       longitude: region.longitude,
@@ -30,17 +36,38 @@ export default function MapScreen({ onLogout }) {
       longitudeDelta: zoomIn ? region.longitudeDelta / 2 : region.longitudeDelta * 2,
     };
     setRegion(newRegion);
-    // mapRef.current?.animateToRegion(newRegion, 300);
     if (mapRef.current) {
-      mapRef.current.animateToRegion(newLocation, 1000);
+      mapRef.current.animateToRegion(newRegion, 1000);
     }
   };
 
   const handlePlaceSelected = (data, details = null) => {
-    if (!details || !details.geometry || !details.geometry.location) return;
+    // if (!details || !details.geometry || !details.geometry.location) return;
 
-    console.log("Place selected:", data.description);
-    console.log("Place details:", details);
+    // console.log("Place selected:", data.description);
+    // console.log("Place details:", details);
+
+    // console.log("handlePlaceSelected called with data:", data);
+
+    if (!details) {
+      console.error("No details provided to handlePlaceSelected");
+      return;
+    }
+
+    if (!details.geometry) {
+      console.error("No geometry in place details:", details);
+      return;
+    }
+
+    if (!details.geometry.location) {
+      console.error("No location in geometry:", details.geometry);
+      return;
+    }
+
+    console.log("Processing valid place selection:", {
+      lat: details.geometry.location.lat,
+      lng: details.geometry.location.lng,
+    });
 
     const newLocation = {
       latitude: details.geometry.location.lat,
@@ -51,6 +78,8 @@ export default function MapScreen({ onLogout }) {
 
     // Prevent unnecessary updates
     setRegion((prevRegion) => {
+      console.log("Previous region:", prevRegion);
+      console.log("New region:", newLocation);
       if (prevRegion.latitude === newLocation.latitude && prevRegion.longitude === newLocation.longitude) {
         return prevRegion; // No update needed
       }
@@ -94,26 +123,133 @@ export default function MapScreen({ onLogout }) {
           returnKeyType={"search"}
           fetchDetails={true}
           enablePoweredByContainer={false}
-          onPress={handlePlaceSelected}
+          onPress={(data, details = null) => {
+            // alert("GooglePlacesAutocomplete onPress triggered!");
+            console.log("GooglePlacesAutocomplete onPress triggered");
+            setAutocompleteFocused(false); // Hide suggestions when selecting an option
+            // console.log("Selected data:", data);
+            try {
+              handlePlaceSelected(data, details);
+            } catch (error) {
+              console.error("Error in onPress handler:", error);
+            }
+          }}
+          onFail={(error) => {
+            console.error("GooglePlacesAutocomplete failed:", error);
+          }}
+          onTimeout={() => {
+            console.log("GooglePlacesAutocomplete timeout");
+          }}
           query={{
             key: config.googleMapsApiKey,
             language: "en",
             components: "country:us",
+            sensor: true,
+            // strictbounds: true,
           }}
+          // styles={{
+          //   container: {
+          //     ...styles.autocompleteContainer,
+          //     zIndex: 9999,
+          //     elevation: 10,
+          //   },
+          //   textInput: styles.autocompleteInput,
+          //   listView: {
+          //     ...styles.autocompleteList,
+          //     zIndex: 9999,
+          //     elevation: 10,
+          //     backgroundColor: "white",
+          //   },
+          //   row: styles.autocompleteRow,
+          //   description: styles.autocompleteDescription,
+          // }}
+
           styles={{
-            container: styles.autocompleteContainer,
-            textInput: styles.autocompleteInput,
-            listView: styles.autocompleteList,
-            row: styles.autocompleteRow,
-            description: styles.autocompleteDescription,
+            container: {
+              ...styles.autocompleteContainer,
+              position: "absolute", // Ensure it's above other elements
+              top: 10, // Adjust position to be reachable
+              left: 10,
+              right: 10,
+              zIndex: 9999,
+              elevation: 10,
+            },
+            textInput: {
+              ...styles.autocompleteInput,
+              backgroundColor: "white", // Ensure it's visible
+            },
+            listView: {
+              ...styles.autocompleteList,
+              position: "absolute", // Ensure suggestions appear on top
+              top: 50, // Adjust so it doesn't get hidden
+              left: 0,
+              right: 0,
+              zIndex: 10000, // Higher than other elements
+              elevation: 10,
+              backgroundColor: "red",
+            },
+            row: {
+              ...styles.autocompleteRow,
+              padding: 10, // Increase touchable area
+            },
+            description: {
+              ...styles.autocompleteDescription,
+              fontSize: 16, // Ensure text is readable
+            },
           }}
+          // textInputProps={{
+          //   clearButtonMode: "while-editing",
+          //   onChangeText: (text) => {
+          //     if (text) {
+          //       console.log("Input text changed:", text);
+          //     }
+          //   },
+          //   onFocus: () => console.log("Input focused"),
+          //   onBlur: () => console.log("Input blurred"),
+          // }}
+
           textInputProps={{
             clearButtonMode: "while-editing",
+            onChangeText: (text) => {
+              if (text !== lastTextRef.current) {
+                // console.log("Input text changed:", text);
+                lastTextRef.current = text;
+              }
+            },
+            // onFocus: () => console.log("Input focused"),
+            // onBlur: () => console.log("Input blurred"),
+            onFocus: () => {
+              console.log("Input focused");
+              setAutocompleteFocused(true); // Ensure map interaction is disabled
+            },
+            onBlur: () => {
+              console.log("Input blurred");
+              setAutocompleteFocused(false); // Restore map interaction
+            },
           }}
           nearbyPlacesAPI='GooglePlacesSearch'
           debounce={300}
+          enableHighAccuracyLocation={true}
+          timeout={20000}
+          maximumAge={10000}
+          GoogleReverseGeocodingQuery={{}}
+          GooglePlacesSearchQuery={{
+            rankby: "distance",
+          }}
+          GooglePlacesDetailsQuery={{
+            fields: "formatted_address,geometry,name",
+          }}
         />
-        <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion}>
+        {/* <MapView ref={mapRef} style={styles.map} region={region} onRegionChangeComplete={setRegion} pointerEvents={lastTextRef.current.length > 0 ? "none" : "auto"}> */}
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          // pointerEvents='none' // Disables interaction to test
+          pointerEvents={isAutocompleteFocused ? "none" : "auto"} // Disable only when needed
+          initialRegion={DEFAULT_LOCATION} // Set initial region once, only on first render
+          // region={isAutocompleteFocused ? region : undefined} // Only bind region when needed (e.g., after autocomplete selection)
+          // onRegionChangeComplete={setRegion} // Update region state after interaction
+        >
           <Marker
             coordinate={{
               latitude: markerLocation.latitude,
