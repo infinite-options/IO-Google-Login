@@ -5,6 +5,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-goo
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
 import Constants from "expo-constants";
+import { requestBluetoothPermissions } from "./src/utils/permissions"; // Import BLE permissions helper
 
 console.log("App.js - Imported config:", config);
 
@@ -13,7 +14,7 @@ export default function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const initialize = async () => {
+    const initializeGoogleSignIn = async () => {
       try {
         console.log("Configuring Google Sign-In...");
         console.log("Environment:", __DEV__ ? "Development" : "Production");
@@ -37,8 +38,9 @@ export default function App() {
         await GoogleSignin.configure(googleConfig);
         console.log("Google Sign-In configured successfully");
 
-        // Sign out any existing user on app start
+        // **Sign out user on every app start (for demo purposes)**
         await GoogleSignin.signOut();
+        console.log("User signed out on app start.");
         setUserInfo(null);
       } catch (error) {
         console.error("Google Sign-In configuration error:", error);
@@ -46,8 +48,27 @@ export default function App() {
       }
     };
 
-    initialize();
+    initializeGoogleSignIn();
   }, []);
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        console.log("Requesting Bluetooth permissions...");
+        const hasPermission = await requestBluetoothPermissions();
+        if (hasPermission) {
+          console.log("BLE permissions granted, can proceed with BLE operations");
+          // Initialize your BLE operations here
+        } else {
+          console.warn("BLE permissions not granted, BLE features may not work properly.");
+        }
+      } catch (error) {
+        console.error("Error checking BLE permissions:", error);
+      }
+    };
+
+    checkPermissions();
+  }, []); // Runs once when component mounts
 
   const signIn = async () => {
     try {
