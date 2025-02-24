@@ -1,17 +1,19 @@
 import "./polyfills";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
 import Constants from "expo-constants";
 import { requestBluetoothPermissions } from "./src/utils/permissions"; // Import BLE permissions helper
+import { startBluetoothScan, startBluetoothBroadcast } from "./src/utils/BLEUtils"; // Import BLE utilities
 
 console.log("App.js - Imported config:", config);
 
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState("Idle");
 
   useEffect(() => {
     const initializeGoogleSignIn = async () => {
@@ -57,8 +59,12 @@ export default function App() {
         console.log("Requesting Bluetooth permissions...");
         const hasPermission = await requestBluetoothPermissions();
         if (hasPermission) {
-          console.log("BLE permissions granted, can proceed with BLE operations");
-          // Initialize your BLE operations here
+          console.log("BLE permissions granted, proceeding with BLE operations...");
+          // Start scanning or broadcasting based on your needs
+          setStatus("Scanning..."); // Change status to scanning
+          startBluetoothScan(); // Start scanning
+          setStatus("Broadcasting..."); // If broadcasting is needed, you can use this
+          startBluetoothBroadcast(); // Start broadcasting
         } else {
           console.warn("BLE permissions not granted, BLE features may not work properly.");
         }
@@ -97,6 +103,16 @@ export default function App() {
     }
   };
 
+  const startScan = () => {
+    setStatus("Scanning...");
+    startBluetoothScan();
+  };
+
+  const startBroadcast = () => {
+    setStatus("Broadcasting...");
+    startBluetoothBroadcast();
+  };
+
   return (
     <View style={styles.container}>
       {!userInfo ? (
@@ -111,6 +127,12 @@ export default function App() {
             <Text>Welcome {userInfo.user.name}</Text>
           </View>
           <MapScreen onLogout={signOut} />
+          {/* BLE Operation Buttons */}
+          <View style={styles.bleButtonsContainer}>
+            <Text>Status: {status}</Text>
+            <Button title='Start BLE Scan' onPress={startScan} />
+            <Button title='Start BLE Broadcast' onPress={startBroadcast} />
+          </View>
         </View>
       )}
     </View>
@@ -148,5 +170,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     backgroundColor: "#fff",
+  },
+  bleButtonsContainer: {
+    marginTop: 20,
+    alignItems: "center",
   },
 });
