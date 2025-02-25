@@ -26,6 +26,7 @@
         ],
         "NSLocationWhenInUseUsageDescription": "This app needs access to location to show it on the map.",
         "NSLocationAlwaysUsageDescription": "This app needs access to location to show it on the map.",
+        "NSBluetoothAlwaysUsageDescription": "This app needs Bluetooth access to communicate with nearby devices.",
         "GMSApiKey": "$(GOOGLE_MAPS_API_KEY)"
       },
       "config": {
