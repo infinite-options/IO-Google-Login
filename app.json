@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.infiniteoptions.googleauthdemo",
+      "bundleIdentifier": "com.infiniteoptions.meetmeupapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleURLTypes": [
@@ -33,7 +33,7 @@
       }
     },
     "android": {
-      "package": "com.infiniteoptions.googleauthdemo",
+      "package": "com.infiniteoptions.meetmeupapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

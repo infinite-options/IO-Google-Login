@@ -7,7 +7,7 @@ const ENV = {
   ANDROID_CLIENT_ID_Debug: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_DEBUG,
   ANDROID_CLIENT_ID_Release: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_RELEASE,
   WEB_CLIENT_ID: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
-  BUNDLE_IDENTIFIER: "com.infiniteoptions.googleauthdemo", // From app.json ios.bundleIdentifier
+  BUNDLE_IDENTIFIER: "com.infiniteoptions.meetmeupapp", // From app.json ios.bundleIdentifier
   GOOGLE_URL_SCHEME: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
   GOOGLE_MAPS_API_KEY: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
 };
