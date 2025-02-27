@@ -2,6 +2,43 @@
 
 Google Login Demo
 
+- Works in React Native on both iOS and Android
+- Demonstrates Google Login - Demonstrates Google Maps
+- Requires keystore file for proper Android deployment
+
+Required Changes for Android Deployment
+
+- Modify the following files:
+
+1. app.json
+
+- change name
+- change slug
+- change bundle identifier
+- change package
+- change scheme
+- change projectID
+
+2. AndroidManifest.xml
+
+- change android:scheme settings (maybe up to 3 instances)
+
+3. build.gradle (in android>apps)
+
+- change namespace
+- change applicationId
+- ensure KEYSTORE_PATH points to location of keystore file (ie MMU.keystore should be in root folder or android>app)
+- location of keystore file determines if you are using a default keystore file or a custom file
+- See Creating Keystore Files and Generating SHA-1 in Creating a React Native App document
+
+4. MainActivity.kt (in src>main>java)
+
+- change package
+
+5. MainApplication.kt (in src>main>java)
+
+- change package
+
 # Modify android>app>build.gradle
 
     paste debug.keystore (or whichever keystore file is being using in android>app> folder)
