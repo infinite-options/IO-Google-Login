@@ -10,14 +10,19 @@ Required Changes for Android Deployment
 
 - Modify the following files:
 
-1. app.json
+0. .env
 
-- change name
-- change slug
+- activate Client Ids and Keystore variables for appropriate project
+- check console log statements during build to confirm env variables are passed correctly
+
+1. app.json (change only if not automatically changed by env file)
+
+- change name (see env file for example)
+- change slug (see env file for example)
 - change bundle identifier
 - change package
 - change scheme
-- change projectID
+- change projectID (generated at expo build?)
 
 2. AndroidManifest.xml
 
@@ -30,6 +35,7 @@ Required Changes for Android Deployment
 - ensure KEYSTORE_PATH points to location of keystore file (ie MMU.keystore should be in root folder or android>app)
 - location of keystore file determines if you are using a default keystore file or a custom file
 - See Creating Keystore Files and Generating SHA-1 in Creating a React Native App document
+- Keystore File should be on shared drive
 
 4. MainActivity.kt (in src>main>java)
 

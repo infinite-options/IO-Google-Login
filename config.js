@@ -7,9 +7,13 @@ const ENV = {
   ANDROID_CLIENT_ID_Debug: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_DEBUG,
   ANDROID_CLIENT_ID_Release: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_RELEASE,
   WEB_CLIENT_ID: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
-  BUNDLE_IDENTIFIER: "com.infiniteoptions.meetmeupapp", // From app.json ios.bundleIdentifier
+  // BUNDLE_IDENTIFIER: "com.infiniteoptions.meetmeupapp", // From app.json ios.bundleIdentifier
   GOOGLE_URL_SCHEME: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
   GOOGLE_MAPS_API_KEY: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+  PROJECT_ID: process.env.EXPO_PUBLIC_PROJECT_ID,
+  APP_NAME: process.env.EXPO_PUBLIC_APP_NAME,
+  APP_SLUG: process.env.EXPO_PUBLIC_APP_SLUG,
+  BUNDLE_IDENTIFIER: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
 };
 console.log("Environment variables loaded:", ENV);
 
@@ -30,6 +34,18 @@ if (!ENV.GOOGLE_URL_SCHEME) {
 }
 if (!ENV.GOOGLE_MAPS_API_KEY) {
   console.error("ERROR: EXPO_PUBLIC_GOOGLE_MAPS_API_KEY is not defined in .env file");
+}
+if (!ENV.PROJECT_ID) {
+  console.error("ERROR: EXPO_PUBLIC_PROJECT_ID is not defined in .env file");
+}
+if (!ENV.APP_NAME) {
+  console.error("ERROR: EXPO_PUBLIC_APP_NAME is not defined in .env file");
+}
+if (!ENV.APP_SLUG) {
+  console.error("ERROR: EXPO_PUBLIC_APP_SLUG is not defined in .env file");
+}
+if (!ENV.BUNDLE_IDENTIFIER) {
+  console.error("ERROR: EXPO_PUBLIC_BUNDLE_IDENTIFIER is not defined in .env file");
 }
 
 const getGoogleClientId = () => ENV.IOS_CLIENT_ID || "";
