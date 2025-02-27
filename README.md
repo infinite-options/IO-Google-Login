@@ -30,8 +30,8 @@ Required Changes for Android Deployment
 
 3. build.gradle (in android>apps)
 
-- change namespace
-- change applicationId
+- change namespace (may be changed automatically by env file)
+- change applicationId (may be changed automatically by env file)
 - ensure KEYSTORE_PATH points to location of keystore file (ie MMU.keystore should be in root folder or android>app)
 - location of keystore file determines if you are using a default keystore file or a custom file
 - See Creating Keystore Files and Generating SHA-1 in Creating a React Native App document
