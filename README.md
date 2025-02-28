@@ -8,6 +8,7 @@ Google Login Demo
 
 Required Changes for Android Deployment
 
+- After modifying files run: cd android ./gradlew clean cd .. before running npx expo run
 - Modify the following files:
 
 0. .env
@@ -30,8 +31,8 @@ Required Changes for Android Deployment
 
 3. build.gradle (in android>apps)
 
-- change namespace (may be changed automatically by env file)
-- change applicationId (may be changed automatically by env file)
+- change namespace (MUST BE HARDCODED AND CHANGED MANUALLY)
+- change applicationId (Currently set to namespace so should be updated automatically)
 - ensure KEYSTORE_PATH points to location of keystore file (ie MMU.keystore should be in root folder or android>app)
 - location of keystore file determines if you are using a default keystore file or a custom file
 - See Creating Keystore Files and Generating SHA-1 in Creating a React Native App document
