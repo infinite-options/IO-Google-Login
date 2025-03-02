@@ -43,12 +43,11 @@ ios/**/GoogleService-Info.plist
 ios/**/Info.plist
 
 # Ignore all ios and android files with confidential info
-**/Info.plist
-**/gradle.properties
-**/strings.xml
-**/merger.xml
-**/values.xml
-**/AndroidManifest.xml
+# **/Info.plist
+# **/strings.xml
+# **/merger.xml
+# **/values.xml
+# **/AndroidManifest.xml
 
 # Metro
 .metro-health-check*
