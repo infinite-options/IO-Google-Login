@@ -16,9 +16,10 @@ To Run Project after downloading from GitHub
 - Copy .env file
 - npm install
 - change hard coded project ID in app.config.js (if necessary)
-- npx eas build:configure
-- nps expo prebuld (optional - this will automatically run if you forget when you run npx expo run)
+- if no eas.json file then: npx eas build:configure (configure for All)
+- if no ios or android folder then: npx expo prebuild (may run automatically run if you forget and run npx expo run)
 - update gradle.properties to hardcode MAPS_API_KEY and set newArchEnabled=false
+- ensure keystore file is accessible in android > app folder
 - npx expo run (npx expo start won't work since IO-Google-Login is configured as an iOS and Android App)
   npx expo start ==> for running apps in React Native using Expo Go, Simulators OR Devices
   npx expo run ==> for running native apps (ie in iOS or Android)
