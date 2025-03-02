@@ -1,4 +1,10 @@
-module.exports = {
+const path = require("path");
+const { config } = require("dotenv");
+
+// Load the environment variables from .env file
+config({ path: path.resolve(__dirname, ".env") });
+
+module.exports = ({ config: expoConfig }) => ({
   expo: {
     name: process.env.EXPO_PUBLIC_APP_NAME,
     slug: process.env.EXPO_PUBLIC_APP_SLUG,
@@ -67,11 +73,11 @@ module.exports = {
     ],
     extra: {
       eas: {
-        // projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
         projectId: "d4a2a545-5903-4bea-acab-e3d08eed24e2",
+        // projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
       },
       androidClientIdDebug: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_DEBUG,
       androidClientIdRelease: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_RELEASE,
     },
   },
-};
+});

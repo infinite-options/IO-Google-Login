@@ -7,12 +7,21 @@ Google Login Demo
 - Requires keystore file for proper Android deployment
 
 To Run Project after downloading from GitHub
+(The trickiness comes from getting the variable from the .env file.
+
+- app.config.js must get the variables from dotenv
+- all other files must get the variables from react-native-dotenv)
 
 - Download from git
 - Copy .env file
 - npm install
 - change hard coded project ID in app.config.js (if necessary)
 - npx eas build:configure
+- nps expo prebuld (optional - this will automatically run if you forget when you run npx expo run)
+- npx expo run (npx expo start won't work since IO-Google-Login is configured as an iOS and Android App)
+  npx expo start ==> for running apps in React Native using Expo Go, Simulators OR Devices
+  npx expo run ==> for running native apps (ie in iOS or Android)
+- update gradle.properties to hardcode MAPS_API_KEY
 
 Required Changes for Android Deployment
 

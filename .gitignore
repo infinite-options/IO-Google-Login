@@ -17,9 +17,33 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Build directories
-ios/
-android/
+# Build directories - Need to track these folders since this is a Bare 
+# ios/
+# android/
+
+# Android Keystore
+android/app/debug.keystore
+android/app/release.keystore
+android/app/src/main/res/values/secrets.xml
+android/keystore.properties
+android/app/google-services.json
+
+# Android sensitive files
+android/app/google-services.json
+android/**/gradle.properties
+android/**/keystore.properties
+android/app/src/main/res/values/strings.xml
+android/app/src/main/res/values/values.xml
+
+# iOS Secrets
+ios/GoogleService-Info.plist
+ios/Runner/GoogleService-Info.plist
+ios/fastlane/
+ios/Pods/
+
+# iOS sensitive files
+ios/**/GoogleService-Info.plist
+ios/**/Info.plist
 
 # Ignore all ios and android files with confidential info
 **/Info.plist
