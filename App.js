@@ -1,10 +1,11 @@
 import "./polyfills";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
 import Constants from "expo-constants";
+import AppleSignIn from "./AppleSignIn";
 
 console.log("App.js - Imported config:", config);
 
@@ -49,17 +50,25 @@ export default function App() {
     initialize();
   }, []);
 
+  const handleSignIn = (userInfo) => {
+    setUserInfo(userInfo);
+    setError(null);
+  };
+
+  const handleError = (errorMessage) => {
+    setError(errorMessage);
+  };
+
   const signIn = async () => {
     try {
       console.log("Starting Google Sign-In process...");
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log("Sign-in successful:", userInfo);
-      setUserInfo(userInfo);
-      setError(null);
+      handleSignIn(userInfo);
     } catch (error) {
       console.error("Sign-in error:", error);
-      setError(error.message);
+      handleError(error.message);
     }
   };
 
@@ -80,9 +89,10 @@ export default function App() {
     <View style={styles.container}>
       {!userInfo ? (
         <>
-          <Text style={styles.title}>Google Auth Demo</Text>
+          <Text style={styles.title}>Sign In</Text>
           {error && <Text style={styles.error}>Error: {error}</Text>}
           <GoogleSigninButton style={styles.googleButton} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={signIn} />
+          <AppleSignIn onSignIn={handleSignIn} onError={handleError} />
         </>
       ) : (
         <View style={styles.mainContainer}>

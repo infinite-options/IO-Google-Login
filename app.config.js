@@ -37,6 +37,11 @@ module.exports = ({ config: expoConfig }) => ({
       config: {
         googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
       },
+      usesAppleSignIn: true,
+      config: {
+        usesNonExemptEncryption: false,
+        signInWithAppleServicesId: process.env.EXPO_PUBLIC_APPLE_SERVICES_ID,
+      },
     },
     android: {
       package: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
