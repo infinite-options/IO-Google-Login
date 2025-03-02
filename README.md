@@ -6,6 +6,12 @@ Google Login Demo
 - Demonstrates Google Login - Demonstrates Google Maps
 - Requires keystore file for proper Android deployment
 
+To Run Project after downloading from GitHub
+
+- npm install
+- npx expo run
+- Select platfrom
+
 Required Changes for Android Deployment
 
 - After modifying files run: cd android ./gradlew clean cd .. before running npx expo run
