@@ -67,7 +67,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "$(PROJECT_ID)"
+        "projectId": "d4a2a545-5903-4bea-acab-e3d08eed24e2"
       },
       "androidClientIdDebug": "EXPO_PUBLIC_ANDROID_CLIENT_ID_DEBUG",
       "androidClientIdRelease": "EXPO_PUBLIC_ANDROID_CLIENT_ID_RELEASE"

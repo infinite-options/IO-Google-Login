@@ -6,6 +6,14 @@ Google Login Demo
 - Demonstrates Google Login - Demonstrates Google Maps
 - Requires keystore file for proper Android deployment
 
+To Run Project after downloading from GitHub
+
+- Download from git
+- Copy .env file
+- npm install
+- change hard coded project ID in app.config.js (if necessary)
+- npx eas build:configure
+
 Required Changes for Android Deployment
 
 - After modifying files run: cd android ./gradlew clean cd .. before running npx expo run

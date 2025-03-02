@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import "dotenv/config";
 
 console.log("Loading environment variables...");
 const ENV = {
