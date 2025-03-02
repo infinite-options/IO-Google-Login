@@ -68,6 +68,12 @@ module.exports = ({ config: expoConfig }) => ({
           ios: {
             useFrameworks: "static",
           },
+          android: {
+            extraProguardRules: "-keep class com.google.android.gms.maps.** { *; }",
+            gradleProperties: {
+              MAPS_API_KEY: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+            },
+          },
         },
       ],
     ],
