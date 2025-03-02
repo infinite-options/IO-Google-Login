@@ -9,6 +9,7 @@ Google Login Demo
 To Run Project after downloading from GitHub
 
 - npm install
+- npx expo prebuild
 - npx expo run
 - Select platfrom
 
