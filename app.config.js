@@ -84,7 +84,7 @@ module.exports = ({ config: expoConfig }) => ({
     ],
     extra: {
       eas: {
-        projectId: "d4a2a545-5903-4bea-acab-e3d08eed24e2",
+        projectId: "a57a9873-7c6d-45b1-af9e-2ba19255cdb6",
         // projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
       },
       androidClientIdDebug: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID_DEBUG,

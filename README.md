@@ -5,6 +5,7 @@ Google Login Demo
 - Works in React Native on both iOS and Android
 - Demonstrates Google Login - Demonstrates Google Maps
 - Requires keystore file for proper Android deployment
+- Use npx expo start --clear to speed interations between builds. It does not build the app for Android or iOS directly. It just starts the project for development purposes.
 
 To Run Project after downloading from GitHub
 (The trickiness comes from getting the variable from the .env file.
@@ -21,6 +22,7 @@ To Run Project after downloading from GitHub
 - check gradle.properties to hardcode MAPS_API_KEY and set newArchEnabled=false
 - ensure keystore file is accessible in android > app folder
 - copy Info.plist file into iOS > GoogleAuthDemo folder
+- change hard coded Reverse Google URL if necessary
 - npx expo run (npx expo start won't work since IO-Google-Login is configured as an iOS and Android App)
   npx expo start ==> for running apps in React Native using Expo Go, Simulators OR Devices
   npx expo run ==> for running native apps (ie in iOS or Android)
@@ -47,6 +49,7 @@ Required Changes for Android Deployment
 2. AndroidManifest.xml
 
 - change android:scheme settings (maybe up to 3 instances)
+- change Maps API Key
 
 3. build.gradle (in android>apps)
 
@@ -94,3 +97,9 @@ Required Changes for Android Deployment
     //         keyPassword 'android'
     //     }
     // }
+
+Required Changes for iOS Deployment
+
+1. Verify Info.plist has correct Reverse Google URL
+2. Check where Maps ID is hard coded
+3. Check where Project ID is hard coded
