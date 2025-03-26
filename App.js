@@ -9,9 +9,14 @@ import AppleSignIn from "./AppleSignIn";
 
 console.log("App.js - Imported config:", config);
 
+// Get Maps API Key from environment variables and export it for use in other components
+export const mapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
+const mapsApiKeyDisplay = mapsApiKey ? "..." + mapsApiKey.slice(-4) : "Not set";
+
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [appleAuthStatus, setAppleAuthStatus] = useState("Checking...");
 
   useEffect(() => {
     const initialize = async () => {
@@ -85,6 +90,25 @@ export default function App() {
     }
   };
 
+  // Helper function to extract the last two digits before .apps.googleusercontent.com
+  const getLastTwoDigits = (clientId) => {
+    if (!clientId) return "Not set";
+
+    // Extract the part before .apps.googleusercontent.com
+    const match = clientId.match(/(.+)\.apps\.googleusercontent\.com$/);
+    if (match) {
+      const idPart = match[1];
+      // Get the last two digits of the ID part
+      return "..." + idPart.slice(-2);
+    }
+
+    // Fallback if the pattern doesn't match
+    return "..." + clientId.slice(-2);
+  };
+
+  console.log("Full URL Scheme:", config.googleURLScheme);
+  console.log("URL Scheme exists:", !!config.googleURLScheme);
+
   return (
     <View style={styles.container}>
       {!userInfo ? (
@@ -93,6 +117,17 @@ export default function App() {
           {error && <Text style={styles.error}>Error: {error}</Text>}
           <GoogleSigninButton style={styles.googleButton} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={signIn} />
           <AppleSignIn onSignIn={handleSignIn} onError={handleError} />
+
+          <View style={styles.apiKeysContainer}>
+            <Text style={styles.apiKeysTitle}>API Keys (Last 2 Digits):</Text>
+            <Text style={styles.apiKeysText}>iOS: {getLastTwoDigits(config.googleClientIds.ios)}</Text>
+            <Text style={styles.apiKeysText}>Android: {getLastTwoDigits(config.googleClientIds.android)}</Text>
+            <Text style={styles.apiKeysText}>Web: {getLastTwoDigits(config.googleClientIds.web)}</Text>
+            <Text style={styles.apiKeysText}>URL Scheme: {config.googleURLScheme ? "..." + config.googleURLScheme.slice(-2) : "Not set"}</Text>
+            <Text style={styles.apiKeysText}>Maps API: {mapsApiKeyDisplay}</Text>
+            <Text style={styles.apiKeysText}>Apple Auth: {appleAuthStatus}</Text>
+            <Text style={styles.apiKeysText}>Environment: {__DEV__ ? "Development" : "Production"}</Text>
+          </View>
         </>
       ) : (
         <View style={styles.mainContainer}>
@@ -137,5 +172,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     backgroundColor: "#fff",
+  },
+  apiKeysContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    position: "absolute",
+    top: "60%", // Position below the title
+    width: "90%",
   },
 });

@@ -6,6 +6,14 @@ Google Login Demo
 - Demonstrates Google Login - Demonstrates Google Maps
 - Requires keystore file for proper Android deployment
 - Use npx expo start --clear to speed interations between builds. It does not build the app for Android or iOS directly. It just starts the project for development purposes.
+- npx expo start --reset-cache to ensure env file loads properly
+
+To Switch Credentials
+
+- Edit credentials in .env file
+- Ensure hardcoded values in Info.plist and AndroidManifest.xml are changed as needed
+- Run npx expo start --reset-cache
+- If that does not display the correct credentials on the Start Page try npx expo run (this will take longer to run)
 
 To Run Project after downloading from GitHub
 (The trickiness comes from getting the variable from the .env file.
@@ -23,9 +31,8 @@ To Run Project after downloading from GitHub
 - ensure keystore file is accessible in android > app folder
 - copy Info.plist file into iOS > GoogleAuthDemo folder
 - change hard coded Reverse Google URL if necessary
-- npx expo run (npx expo start won't work since IO-Google-Login is configured as an iOS and Android App)
+- npx expo run (to rebuild the app)
   npx expo start ==> for running apps in React Native using Expo Go, Simulators OR Devices
-  npx expo run ==> for running native apps (ie in iOS or Android)
 
 Required Changes for Android Deployment
 

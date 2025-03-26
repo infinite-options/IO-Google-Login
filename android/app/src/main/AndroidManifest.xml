@@ -27,7 +27,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho"/>
+        <!-- <data android:scheme="com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho"/> -->
+         <data android:scheme="com.googleusercontent.apps.336598290180-e89eo7pqbfs7ilj3hjpj1fvr661cdnn2"/>
         <data android:scheme="com.infiniteoptions.googleauthdemo"/>
         <data android:scheme="exp+google-auth-demo"/>
       </intent-filter>
