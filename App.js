@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     position: "absolute",
-    top: "60%", // Position below the title
+    top: "70%", // Position below the title
     width: "90%",
   },
 });
