@@ -34,9 +34,7 @@ export default function App() {
 
         const googleConfig = {
           iosClientId: config.googleClientIds.ios,
-          androidClientId: config.googleClientIds.android,
-          webClientId: config.googleClientIds.web,
-          offlineAccess: true,
+          offlineAccess: false,
         };
         console.log("Google Sign-In configuration:", googleConfig);
 
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     position: "absolute",
-    top: "60%", // Position below the title
+    top: "70%", // Position below the title
     width: "90%",
   },
 });

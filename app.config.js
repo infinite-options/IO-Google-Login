@@ -20,24 +20,32 @@ module.exports = ({ config: expoConfig }) => ({
     },
     assetBundlePatterns: ["**/*"],
     ios: {
+      usesAppleSignIn: true,
       supportsTablet: true,
-      bundleIdentifier: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
+      // bundleIdentifier: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
+      bundleIdentifier: "com.infiniteoptions.meetmeupapp",
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         CFBundleURLTypes: [
           {
-            CFBundleURLSchemes: [process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME],
+            // CFBundleURLSchemes: [process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME],
+            CFBundleURLSchemes: "com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho",
             CFBundleURLName: "google",
           },
         ],
         NSLocationWhenInUseUsageDescription: "This app needs access to location to show it on the map.",
         NSLocationAlwaysUsageDescription: "This app needs access to location to show it on the map.",
-        GMSApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+        // GMSApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+        GMSApiKey: "AIzaSyBHZlcN8UeLNySmAf66WOfu1N_hDBaq0-I",
       },
       config: {
-        googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+        // googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: "AIzaSyBHZlcN8UeLNySmAf66WOfu1N_hDBaq0-I",
+        googleSignIn: {
+          reservedClientId: "com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho",
+        },
       },
-      usesAppleSignIn: true,
+      // usesAppleSignIn: true,
       config: {
         usesNonExemptEncryption: false,
         signInWithAppleServicesId: process.env.EXPO_PUBLIC_APPLE_SERVICES_ID,
@@ -59,7 +67,8 @@ module.exports = ({ config: expoConfig }) => ({
     web: {
       favicon: "./assets/favicon.png",
     },
-    scheme: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
+    // scheme: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
+    scheme: "com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho",
     plugins: [
       [
         "@react-native-google-signin/google-signin",

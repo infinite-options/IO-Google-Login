@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'GoogleAuthDemo'
+rootProject.name = 'MMU App'
 
 dependencyResolutionManagement {
   versionCatalogs {

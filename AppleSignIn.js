@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AppleSignIn = ({ onSignIn, onError }) => {
   const handleAppleSignIn = async () => {
+    console.log("In handleAppleSignIn");
     try {
       if (Platform.OS === "ios") {
         const credential = await AppleAuthentication.signInAsync({
