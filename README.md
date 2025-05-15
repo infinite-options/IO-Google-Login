@@ -3,6 +3,11 @@
 Google Login Demo
 
 - Works in React Native on both iOS and Android
+  5/14 Update:
+  - Apple Login works on iOS Simulator
+  - Google Login on iOS Simulator requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"
+  - Google Login works on Android Emulator
+    BUT Google Login does NOT work on iOS.
 - Demonstrates Google Login - Demonstrates Google Maps
 - Requires keystore file for proper Android deployment
 - Use npx expo start --clear to speed interations between builds. It does not build the app for Android or iOS directly. It just starts the project for development purposes.
@@ -11,7 +16,7 @@ Google Login Demo
 To Switch Credentials
 
 - Edit credentials in .env file
-- Ensure hardcoded values in Info.plist and AndroidManifest.xml are changed as needed
+- Ensure hardcoded values in Info.plist (3 locations) and AndroidManifest.xml (4 locations) are changed as needed
 - Run npx expo start --reset-cache
 - If that does not display the correct credentials on the Start Page try npx expo run (this will take longer to run)
 
@@ -55,13 +60,13 @@ Required Changes for Android Deployment
 
 2. AndroidManifest.xml
 
-- change android:scheme settings (maybe up to 3 instances)
+- change android:scheme settings (maybe up to 4 instances)
 - change Maps API Key
 
 3. build.gradle (in android>apps)
 
-- change namespace (MUST BE HARDCODED AND CHANGED MANUALLY)
-- change applicationId (Currently set to namespace so should be updated automatically)
+- change namespace (MUST BE HARDCODED AND CHANGED MANUALLY) (2 locations)
+- change applicationId (May be set to namespace so may be updated automatically)
 - ensure KEYSTORE_PATH points to location of keystore file (ie MMU.keystore should be in root folder or android>app)
 - location of keystore file determines if you are using a default keystore file or a custom file
 - See Creating Keystore Files and Generating SHA-1 in Creating a React Native App document
@@ -74,6 +79,10 @@ Required Changes for Android Deployment
 5. MainApplication.kt (in src>main>java)
 
 - change package
+
+6. settings.gradle
+
+- Change rootProject.name if desired
 
 # Modify android>app>build.gradle
 
