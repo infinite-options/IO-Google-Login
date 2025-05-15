@@ -1,3 +1,4 @@
+/** package com.infiniteoptions.googleauthdemo */
 package com.infiniteoptions.googleauthdemo
 
 import android.app.Application

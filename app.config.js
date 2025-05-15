@@ -26,8 +26,12 @@ module.exports = ({ config: expoConfig }) => ({
         ITSAppUsesNonExemptEncryption: false,
         CFBundleURLTypes: [
           {
+            CFBundleURLSchemes: [process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER],
+            // CFBundleURLName: "bundleId",
+          },
+          {
             CFBundleURLSchemes: [process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME],
-            CFBundleURLName: "google",
+            // CFBundleURLName: "google",
           },
         ],
         NSLocationWhenInUseUsageDescription: "This app needs access to location to show it on the map.",
@@ -65,6 +69,7 @@ module.exports = ({ config: expoConfig }) => ({
         "@react-native-google-signin/google-signin",
         {
           iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
+          // iosUrlScheme: "com.googleusercontent.apps.466541803518-mpejfib4i7g8m88tbk4hpgfrmqlt9aho",
         },
       ],
       [

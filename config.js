@@ -92,8 +92,9 @@ const config = {
     ios: ENV.IOS_CLIENT_ID,
     android: getAndroidClientId(),
     web: ENV.WEB_CLIENT_ID,
+    googleURLScheme: ENV.GOOGLE_URL_SCHEME,
   },
-  googleURLScheme: getGoogleURLScheme(),
+  // googleURLScheme: getGoogleURLScheme(),
   bundleIdentifier: ENV.BUNDLE_IDENTIFIER,
   googleMapsApiKey: ENV.GOOGLE_MAPS_API_KEY,
 };
