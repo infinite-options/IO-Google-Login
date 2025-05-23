@@ -10,12 +10,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		3C2187D4AFC64FF07B10811F /* Pods_GoogleAuthDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9667549548CA6E8FD92E6F7 /* Pods_GoogleAuthDemo.framework */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		41BCDF09B912246D7B5565FD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E1F836F9E7D3DF9F3FDE8909 /* PrivacyInfo.xcprivacy */; };
-		6F5554928F69499BBA080906 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882C6617E720468DA8A5E217 /* noop-file.swift */; };
+		4F5D2D3B1DD195713115B89C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 90B52589B62053E7E1E74066 /* PrivacyInfo.xcprivacy */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
-		B49D9E8460E0D2B42FA7B7D7 /* Pods_GoogleAuthDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C577F8CEF9E755B2B9AC49C9 /* Pods_GoogleAuthDemo.framework */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		D28E1CA0C53B4AE68236F593 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7779F93A06F3479B9F994FE0 /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,13 +26,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GoogleAuthDemo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GoogleAuthDemo/main.m; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-GoogleAuthDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoogleAuthDemo.debug.xcconfig"; path = "Target Support Files/Pods-GoogleAuthDemo/Pods-GoogleAuthDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		7779F93A06F3479B9F994FE0 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "GoogleAuthDemo/noop-file.swift"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-GoogleAuthDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GoogleAuthDemo.release.xcconfig"; path = "Target Support Files/Pods-GoogleAuthDemo/Pods-GoogleAuthDemo.release.xcconfig"; sourceTree = "<group>"; };
-		882C6617E720468DA8A5E217 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "GoogleAuthDemo/noop-file.swift"; sourceTree = "<group>"; };
+		90B52589B62053E7E1E74066 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = GoogleAuthDemo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A9667549548CA6E8FD92E6F7 /* Pods_GoogleAuthDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GoogleAuthDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = GoogleAuthDemo/SplashScreen.storyboard; sourceTree = "<group>"; };
+		AF460B8A248742EE810421ED /* GoogleAuthDemo-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "GoogleAuthDemo-Bridging-Header.h"; path = "GoogleAuthDemo/GoogleAuthDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C577F8CEF9E755B2B9AC49C9 /* Pods_GoogleAuthDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GoogleAuthDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5D205EADE884B8AA165B4E5 /* GoogleAuthDemo-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "GoogleAuthDemo-Bridging-Header.h"; path = "GoogleAuthDemo/GoogleAuthDemo-Bridging-Header.h"; sourceTree = "<group>"; };
-		E1F836F9E7D3DF9F3FDE8909 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = GoogleAuthDemo/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-GoogleAuthDemo/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -42,7 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B49D9E8460E0D2B42FA7B7D7 /* Pods_GoogleAuthDemo.framework in Frameworks */,
+				3C2187D4AFC64FF07B10811F /* Pods_GoogleAuthDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,9 +59,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				882C6617E720468DA8A5E217 /* noop-file.swift */,
-				D5D205EADE884B8AA165B4E5 /* GoogleAuthDemo-Bridging-Header.h */,
-				E1F836F9E7D3DF9F3FDE8909 /* PrivacyInfo.xcprivacy */,
+				7779F93A06F3479B9F994FE0 /* noop-file.swift */,
+				AF460B8A248742EE810421ED /* GoogleAuthDemo-Bridging-Header.h */,
+				90B52589B62053E7E1E74066 /* PrivacyInfo.xcprivacy */,
 			);
 			name = GoogleAuthDemo;
 			sourceTree = "<group>";
@@ -70,7 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				C577F8CEF9E755B2B9AC49C9 /* Pods_GoogleAuthDemo.framework */,
+				A9667549548CA6E8FD92E6F7 /* Pods_GoogleAuthDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -147,13 +147,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GoogleAuthDemo" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				DD7B05EF1737ADFBB9639D74 /* [Expo] Configure project */,
+				C866BBB034822414D5351E1F /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				F8445AE7F6530B85A2933E1B /* [CP] Embed Pods Frameworks */,
+				CA651458D82ECA80E13C2BDB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -205,7 +205,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				41BCDF09B912246D7B5565FD /* PrivacyInfo.xcprivacy in Resources */,
+				4F5D2D3B1DD195713115B89C /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +293,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GoogleAuthDemo/Pods-GoogleAuthDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DD7B05EF1737ADFBB9639D74 /* [Expo] Configure project */ = {
+		C866BBB034822414D5351E1F /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -312,7 +312,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-GoogleAuthDemo/expo-configure-project.sh\"\n";
 		};
-		F8445AE7F6530B85A2933E1B /* [CP] Embed Pods Frameworks */ = {
+		CA651458D82ECA80E13C2BDB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -340,7 +340,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				6F5554928F69499BBA080906 /* noop-file.swift in Sources */,
+				D28E1CA0C53B4AE68236F593 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +371,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.infiniteoptions.googleauthdemo;
-				PRODUCT_NAME = "GoogleAuthDemo";
+				PRODUCT_NAME = GoogleAuthDemo;
 				SWIFT_OBJC_BRIDGING_HEADER = "GoogleAuthDemo/GoogleAuthDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -402,7 +402,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.infiniteoptions.googleauthdemo;
-				PRODUCT_NAME = "GoogleAuthDemo";
+				PRODUCT_NAME = GoogleAuthDemo;
 				SWIFT_OBJC_BRIDGING_HEADER = "GoogleAuthDemo/GoogleAuthDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

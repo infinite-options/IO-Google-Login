@@ -5,13 +5,15 @@ import * as WebBrowser from "expo-web-browser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AppleSignIn = ({ onSignIn, onError }) => {
+  console.log("------- in AppleSignIn.js -------");
   const handleAppleSignIn = async () => {
+    console.log("AppleSignIn button pressed");
     try {
       if (Platform.OS === "ios") {
         const credential = await AppleAuthentication.signInAsync({
           requestedScopes: [AppleAuthentication.AppleAuthenticationScope.FULL_NAME, AppleAuthentication.AppleAuthenticationScope.EMAIL],
         });
-
+        console.log("Apple Sign-in successful", credential);
         // If we received the user's name, store it for future use
         if (credential.fullName) {
           const userFullName = {
@@ -47,6 +49,7 @@ const AppleSignIn = ({ onSignIn, onError }) => {
         onSignIn(userInfo);
       } else {
         // For Android, open web-based Sign in with Apple
+        console.log("Attempting to open web-based Sign in with Apple");
         const result = await WebBrowser.openAuthSessionAsync(
           `https://appleid.apple.com/auth/authorize?client_id=${process.env.EXPO_PUBLIC_APPLE_SERVICES_ID}&redirect_uri=${encodeURIComponent(
             "https://auth.expo.io/@pmarathay/google-auth-demo/redirect"

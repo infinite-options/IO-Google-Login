@@ -14,6 +14,7 @@ export const mapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 const mapsApiKeyDisplay = mapsApiKey ? "..." + mapsApiKey.slice(-4) : "Not set";
 
 export default function App() {
+  console.log("------- Program Starting in App.js -------");
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const [appleAuthStatus, setAppleAuthStatus] = useState("Checking...");

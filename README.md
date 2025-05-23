@@ -1,24 +1,45 @@
-# IO-Login-Google
+# IO-Google-Login
 
-Google Login Demo
+Google and Apple Login Demo
 
-- Works in React Native on both iOS and Android
-  5/14 Update:
-  - Apple Login works on iOS Simulator
-  - Google Login on iOS Simulator requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"
-  - Google Login works on Android Emulator
-    BUT Google Login does NOT work on iOS.
-- Demonstrates Google Login - Demonstrates Google Maps
-- Requires keystore file for proper Android deployment
-- Use npx expo start --clear to speed interations between builds. It does not build the app for Android or iOS directly. It just starts the project for development purposes.
-- npx expo start --reset-cache to ensure env file loads properly
+Purpose:
 
-To Switch Credentials
+- Demonstrate Google Login works on Android Emulator
+- Demonstrate Google Login works on iPhone Emulator
+- Demonstrate Apple Login works on iPhone Emulator
+- Demonstrate Google Maps and Apple Maps after Login
+- Confirm that Credential work by being able to switch credentials and still Login (an error would indicate a mis-configuration)
 
-- Edit credentials in .env file
-- Ensure hardcoded values in Info.plist (3 locations) and AndroidManifest.xml (4 locations) are changed as needed
-- Run npx expo start --reset-cache
-- If that does not display the correct credentials on the Start Page try npx expo run (this will take longer to run)
+Switching Credentials
+
+- Credentials are stored in the .env file
+- Comment out / Comment in new credentials with the same variable names
+- Edit iOS specific files (at least 3 instances) (Info.plist will autogenerate if your run npx expo prebuild)
+  - Info.plist: Look for CFBundleDisplayName
+  - Info.plist: Look for CFBundleURLSchemes for scheme
+  - Info.plist: Look for CFBundleURLSchemes for slug
+- Edit Android specific files (at least 4 instances)
+  - AndroidManifest.xml
+  - AndroidManifest.xml
+  - AndroidManifest.xml
+  - AndroidManifest.xml
+- Requires propert keystore file for proper Android deployment (Default file is debug.keystore pwd:android)
+
+- After switching Credentials, Run App as follows:
+  - Delete the ios (rm -rf ios) or Android (rm -rf android) folders (or delete both with rm -rf ios android)
+  - Delete node modules
+  - Install node modules
+  - Clear cache [npx expo start --clear to speed interations between builds]
+    OR [npx expo start --reset-cache to ensure env file loads properly]
+  - Do a Pre-build to re-create ios and/or Android folders [npx expo prebuild]
+  - [Optional: Google Login on iOS Simulator may require Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"] (NOTE: This may also prevent other programs from logging in with Apple - still need to debug)
+  - Run the app [npx expo run:ios OR npx expo run:ios --device]
+
+Current App Status (5/22/2025)
+
+- Google Login on Android Emulator: Works
+- Google Login on iOS Emulator: Requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"
+- Apple Login on iOS Emulator: Works
 
 To Run Project after downloading from GitHub
 (The trickiness comes from getting the variable from the .env file.
