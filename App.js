@@ -1,9 +1,10 @@
 import "./polyfills";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
+import { StyleSheet, Text, View, Platform, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
+import LoginSuccess from "./screens/LoginSuccess";
 import Constants from "expo-constants";
 import AppleSignIn from "./AppleSignIn";
 
@@ -18,12 +19,22 @@ export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const [appleAuthStatus, setAppleAuthStatus] = useState("Checking...");
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [showMap, setShowMap] = useState(false);
+  const [mapError, setMapError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const initialize = async () => {
       try {
+        if (!isMounted) return;
+
         console.log("Configuring Google Sign-In...");
         console.log("Environment:", __DEV__ ? "Development" : "Production");
+
+        // Add a small delay to ensure the app is fully loaded
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         console.log("Using client IDs:", {
           ios: config.googleClientIds.ios,
@@ -46,19 +57,30 @@ export default function App() {
 
         // Sign out any existing user on app start
         await GoogleSignin.signOut();
-        setUserInfo(null);
+        if (isMounted) {
+          setUserInfo(null);
+          setIsInitializing(false);
+        }
       } catch (error) {
         console.error("Google Sign-In configuration error:", error);
-        setError(error.message);
+        if (isMounted) {
+          setError(error.message);
+          setIsInitializing(false);
+        }
       }
     };
 
     initialize();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleSignIn = (userInfo) => {
     setUserInfo(userInfo);
     setError(null);
+    setShowMap(false); // Reset map state when signing in
   };
 
   const handleError = (errorMessage) => {
@@ -110,6 +132,33 @@ export default function App() {
   console.log("Full URL Scheme:", config.googleURLScheme);
   console.log("URL Scheme exists:", !!config.googleURLScheme);
 
+  const handleNavigateToMap = () => {
+    try {
+      setShowMap(true);
+    } catch (error) {
+      console.error("Error navigating to map:", error);
+      setMapError(error.message);
+      setShowMap(false);
+      Alert.alert("Map Error", "There was an error loading the map. Please try again later.", [{ text: "OK" }]);
+    }
+  };
+
+  const handleMapError = (error) => {
+    console.error("Map error occurred:", error);
+    setMapError(error.message);
+    setShowMap(false);
+    Alert.alert("Map Error", "There was an error with the map. Please try again later.", [{ text: "OK" }]);
+  };
+
+  if (isInitializing) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size='large' color='#0000ff' />
+        <Text style={styles.loadingText}>Initializing...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {!userInfo ? (
@@ -130,13 +179,33 @@ export default function App() {
             <Text style={styles.apiKeysText}>Environment: {__DEV__ ? "Development" : "Production"}</Text>
           </View>
         </>
-      ) : (
+      ) : showMap ? (
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text>Welcome {userInfo.user.name}</Text>
+            <TouchableOpacity style={styles.backButton} onPress={() => setShowMap(false)}>
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
           </View>
-          <MapScreen onLogout={signOut} />
+          {mapError ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>Map Error: {mapError}</Text>
+              <TouchableOpacity
+                style={styles.retryButton}
+                onPress={() => {
+                  setMapError(null);
+                  setShowMap(false);
+                }}
+              >
+                <Text style={styles.retryButtonText}>Go Back</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <MapScreen onLogout={signOut} onError={handleMapError} />
+          )}
         </View>
+      ) : (
+        <LoginSuccess onNavigateToMap={handleNavigateToMap} mapError={mapError} />
       )}
     </View>
   );
@@ -182,7 +251,42 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     position: "absolute",
-    top: "70%", // Position below the title
+    top: "70%",
     width: "90%",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+  },
+  backButton: {
+    padding: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 5,
+  },
+  backButtonText: {
+    color: "#333",
+    fontSize: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  retryButton: {
+    backgroundColor: "#2196F3",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  retryButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });

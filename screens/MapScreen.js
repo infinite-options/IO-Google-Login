@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, Dimensions, TouchableOpacity, Text, KeyboardAvoidingView, Platform } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import config from "../config";
 
@@ -17,15 +17,35 @@ const DEFAULT_LOCATION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-console.log("Google Maps API Key being used:", config.googleMapsApiKey);
-console.log("Initializing GooglePlacesAutocomplete with API key:", config.googleMapsApiKey);
+console.log("MapScreen - Platform:", Platform.OS);
+console.log("MapScreen - Google Maps API Key:", config.googleMapsApiKey);
+console.log("MapScreen - Using provider:", Platform.OS === "android" ? "PROVIDER_GOOGLE" : "default");
 
-export default function MapScreen({ onLogout }) {
+export default function MapScreen({ onLogout, onError }) {
   const [isAutocompleteFocused, setAutocompleteFocused] = useState(false);
   const lastTextRef = useRef("");
   const [region, setRegion] = useState(DEFAULT_LOCATION);
   const [markerLocation, setMarkerLocation] = useState(DEFAULT_LOCATION);
   const mapRef = useRef(null);
+  const [isMapReady, setIsMapReady] = useState(false);
+
+  useEffect(() => {
+    console.log("MapScreen - Component mounted");
+    try {
+      // Add a small delay before initializing the map
+      const timer = setTimeout(() => {
+        if (mapRef.current) {
+          console.log("MapScreen - Initializing map with default location");
+          mapRef.current.animateToRegion(DEFAULT_LOCATION, 1000);
+        }
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error("MapScreen - Error in useEffect:", error);
+      onError?.(error);
+    }
+  }, [onError]);
 
   const handleZoom = (zoomIn) => {
     // console.log("handleZoom called with zoomIn:", zoomIn);
@@ -112,6 +132,11 @@ export default function MapScreen({ onLogout }) {
   //     mapRef.current?.animateToRegion(newLocation, 1000);
   //   }
   // };
+
+  const handleMapError = (error) => {
+    console.error("MapScreen - Map error:", error);
+    onError?.(error);
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
@@ -244,16 +269,38 @@ export default function MapScreen({ onLogout }) {
         <MapView
           ref={mapRef}
           style={styles.map}
-          // pointerEvents='none' // Disables interaction to test
-          pointerEvents={isAutocompleteFocused ? "none" : "auto"} // Disable only when needed
-          initialRegion={DEFAULT_LOCATION} // Set initial region once, only on first render
-          // region={isAutocompleteFocused ? region : undefined} // Only bind region when needed (e.g., after autocomplete selection)
-          // onRegionChangeComplete={setRegion} // Update region state after interaction
+          provider={Platform.OS === "android" ? PROVIDER_GOOGLE : undefined}
+          pointerEvents={isAutocompleteFocused ? "none" : "auto"}
+          initialRegion={DEFAULT_LOCATION}
+          onMapReady={() => {
+            console.log("MapScreen - Map is ready");
+            setIsMapReady(true);
+          }}
+          onError={handleMapError}
+          onRegionChangeComplete={(newRegion) => {
+            try {
+              if (!isMapReady) {
+                console.log("MapScreen - Map not ready, skipping region update");
+                return;
+              }
+              // Only update if the change is significant enough
+              if (Math.abs(newRegion.latitude - region.latitude) > 0.0001 || Math.abs(newRegion.longitude - region.longitude) > 0.0001) {
+                console.log("MapScreen - Updating region:", newRegion);
+                setRegion(newRegion);
+              }
+            } catch (error) {
+              console.error("MapScreen - Error in region change:", error);
+              onError?.(error);
+            }
+          }}
         >
           <Marker
             coordinate={{
               latitude: markerLocation.latitude,
               longitude: markerLocation.longitude,
+            }}
+            onPress={() => {
+              console.log("MapScreen - Marker pressed");
             }}
           />
         </MapView>

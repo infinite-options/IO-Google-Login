@@ -38,8 +38,8 @@ Switching Credentials
 Current App Status (5/22/2025)
 
 - Google Login on Android Emulator: Works
-- Google Login on iOS Emulator: Requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"
-- Apple Login on iOS Emulator: Works
+- Google Login on iOS Emulator: Requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue". Works with google-auth-demo Credentials
+- Apple Login on iOS Emulator: Works with google-auth-demo Credentials
 
 To Run Project after downloading from GitHub
 (The trickiness comes from getting the variable from the .env file.
