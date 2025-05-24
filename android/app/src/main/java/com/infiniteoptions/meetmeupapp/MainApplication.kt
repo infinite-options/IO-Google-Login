@@ -1,4 +1,4 @@
-package com.infiniteoptions.googleauthdemo
+package com.infiniteoptions.meetmeupapp
 
 import android.app.Application
 import android.content.res.Configuration

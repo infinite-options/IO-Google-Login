@@ -44,6 +44,7 @@ Switching Credentials
   rm -rf node_modules
   rm -rf .expo
   npm cache clean --force
+  npx expo start --reset-cache
 
   # Reinstall everything
 
@@ -51,11 +52,18 @@ Switching Credentials
   npx expo prebuild --clean
   npx expo run
 
+  # Minimum when switching Credentials
+
+  rm -rf android or rm -rf ios
+  npx expo start --reset-cache
+  npx expo prebuild --clean
+  npx expo run
+
 Current App Status (5/22/2025)
 
 - Google Login on Android Emulator: Works
 - Google Login on iOS Emulator: Requires Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue". Works with google-auth-demo Credentials
-- Apple Login on iOS Emulator: Works with google-auth-demo Credentials
+- Apple Login on iOS Emulator: Works with MMU credential and google-auth-demo Credentials? You may have to run the app on Xcode and/or a physical device first to ensure the Team and Bundle Identifiers are set. Then Apple Login worked on the simulator
 
 To Run Project after downloading from GitHub
 (The trickiness comes from getting the variable from the .env file.

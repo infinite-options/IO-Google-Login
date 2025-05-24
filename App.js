@@ -192,7 +192,7 @@ export default function App() {
           <AppleSignIn onSignIn={handleSignIn} onError={handleError} />
 
           <View style={styles.apiKeysContainer}>
-            <Text style={styles.apiKeysTitle}>API Keys (Last 2 Digits):</Text>
+            <Text style={styles.apiKeysTitle}>API Keys (First 4 Digits):</Text>
             <Text style={styles.apiKeysText}>iOS: {getFirstFourDigits(config.googleClientIds.ios)}</Text>
             <Text style={styles.apiKeysText}>Android: {getFirstFourDigits(config.googleClientIds.android)}</Text>
             <Text style={styles.apiKeysText}>Web: {getFirstFourDigits(config.googleClientIds.web)}</Text>
