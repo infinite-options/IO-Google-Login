@@ -26,14 +26,30 @@ Switching Credentials
 - Requires propert keystore file for proper Android deployment (Default file is debug.keystore pwd:android)
 
 - After switching Credentials, Run App as follows:
+
   - Delete the ios (rm -rf ios) or Android (rm -rf android) folders (or delete both with rm -rf ios android)
-  - Delete node modules
-  - Install node modules
+  - Delete node modules (rm -rf node_modules package-lock.json)
+  - Install node modules (npm install)
   - Clear cache [npx expo start --clear to speed interations between builds]
     OR [npx expo start --reset-cache to ensure env file loads properly]
   - Do a Pre-build to re-create ios and/or Android folders [npx expo prebuild]
   - [Optional: Google Login on iOS Simulator may require Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"] (NOTE: This may also prevent other programs from logging in with Apple - still need to debug)
   - Run the app [npx expo run:ios OR npx expo run:ios --device]
+
+  Full Reset:
+
+  # Remove all caches and builds
+
+  rm -rf ios android (or to be more targeted: rm -rf android/build and rm -rf android/app/build)
+  rm -rf node_modules
+  rm -rf .expo
+  npm cache clean --force
+
+  # Reinstall everything
+
+  npm install
+  npx expo prebuild --clean
+  npx expo run
 
 Current App Status (5/22/2025)
 
