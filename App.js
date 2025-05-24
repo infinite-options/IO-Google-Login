@@ -1,5 +1,5 @@
 import "./polyfills";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Platform, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
 import config from "./config";
@@ -93,6 +93,8 @@ export default function App() {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log("Sign-in successful:", userInfo);
+      console.log("Sign-in successful:", userInfo.user);
+      console.log("Sign-in successful:", userInfo.user.name);
       handleSignIn(userInfo);
     } catch (error) {
       console.error("Sign-in error:", error);
@@ -129,11 +131,32 @@ export default function App() {
     return "..." + clientId.slice(-2);
   };
 
+  // Helper function to extract the first four digits/letters of the unique part before .apps.googleusercontent.com
+  const getFirstFourDigits = (clientId) => {
+    if (!clientId) return "Not set";
+
+    // Extract the part before .apps.googleusercontent.com
+    const match = clientId.match(/([\w-]+)-([\w]+)\.apps\.googleusercontent\.com$/);
+    if (match) {
+      const uniquePart = match[2];
+      return uniquePart.slice(0, 4);
+    }
+
+    // Fallback: try to extract the part after the first hyphen
+    const fallback = clientId.split("-")[1];
+    if (fallback) {
+      return fallback.slice(0, 4);
+    }
+
+    return "Not found";
+  };
+
   console.log("Full URL Scheme:", config.googleURLScheme);
   console.log("URL Scheme exists:", !!config.googleURLScheme);
 
-  const handleNavigateToMap = () => {
+  const handleNavigateToMap = useCallback(() => {
     try {
+      console.log("Navigating to map set to true...");
       setShowMap(true);
     } catch (error) {
       console.error("Error navigating to map:", error);
@@ -141,7 +164,7 @@ export default function App() {
       setShowMap(false);
       Alert.alert("Map Error", "There was an error loading the map. Please try again later.", [{ text: "OK" }]);
     }
-  };
+  }, []);
 
   const handleMapError = (error) => {
     console.error("Map error occurred:", error);
@@ -170,10 +193,10 @@ export default function App() {
 
           <View style={styles.apiKeysContainer}>
             <Text style={styles.apiKeysTitle}>API Keys (Last 2 Digits):</Text>
-            <Text style={styles.apiKeysText}>iOS: {getLastTwoDigits(config.googleClientIds.ios)}</Text>
-            <Text style={styles.apiKeysText}>Android: {getLastTwoDigits(config.googleClientIds.android)}</Text>
-            <Text style={styles.apiKeysText}>Web: {getLastTwoDigits(config.googleClientIds.web)}</Text>
-            <Text style={styles.apiKeysText}>URL Scheme: {config.googleURLScheme ? "..." + config.googleURLScheme.slice(-2) : "Not set"}</Text>
+            <Text style={styles.apiKeysText}>iOS: {getFirstFourDigits(config.googleClientIds.ios)}</Text>
+            <Text style={styles.apiKeysText}>Android: {getFirstFourDigits(config.googleClientIds.android)}</Text>
+            <Text style={styles.apiKeysText}>Web: {getFirstFourDigits(config.googleClientIds.web)}</Text>
+            <Text style={styles.apiKeysText}>URL Scheme: {config.googleURLScheme ? config.googleURLScheme.split("-").pop().slice(0, 4) : "Not set"}</Text>
             <Text style={styles.apiKeysText}>Maps API: {mapsApiKeyDisplay}</Text>
             <Text style={styles.apiKeysText}>Apple Auth: {appleAuthStatus}</Text>
             <Text style={styles.apiKeysText}>Environment: {__DEV__ ? "Development" : "Production"}</Text>
@@ -182,7 +205,7 @@ export default function App() {
       ) : showMap ? (
         <View style={styles.mainContainer}>
           <View style={styles.header}>
-            <Text>Welcome {userInfo.user.name}</Text>
+            <Text>Welcome {userInfo?.user?.name || "User"}</Text>
             <TouchableOpacity style={styles.backButton} onPress={() => setShowMap(false)}>
               <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
