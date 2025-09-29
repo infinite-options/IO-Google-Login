@@ -61,6 +61,7 @@ module.exports = ({ config: expoConfig }) => ({
     },
     scheme: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
     plugins: [
+      "expo-asset",
       [
         "@react-native-google-signin/google-signin",
         {

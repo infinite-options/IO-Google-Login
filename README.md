@@ -29,12 +29,12 @@ Switching Credentials
 
   - Delete the ios (rm -rf ios) or Android (rm -rf android) folders (or delete both with rm -rf ios android)
   - Delete node modules (rm -rf node_modules package-lock.json)
-  - Install node modules (npm install)
+  - Install node modules and dependancies (npm install && npx expo install)
   - Clear cache [npx expo start --clear to speed interations between builds]
     OR [npx expo start --reset-cache to ensure env file loads properly]
-  - Do a Pre-build to re-create ios and/or Android folders [npx expo prebuild]
+  - Do a Pre-build to re-create ios and/or Android folders [npx expo prebuild OR npx expo prebuild --platform android]
   - [Optional: Google Login on iOS Simulator may require Device > Erase all Contents and Settings (ie starting with a Fresh Device) otherwise you get a "Safari can't connect due to a network connectivity issue"] (NOTE: This may also prevent other programs from logging in with Apple - still need to debug)
-  - Run the app [npx expo run:ios OR npx expo run:ios --device]
+  - Run the app [npx expo run:ios OR npx expo run:ios --device OR npx expo run:android]
 
   Full Reset:
 
@@ -49,8 +49,12 @@ Switching Credentials
   # Reinstall everything
 
   npm install
-  npx expo prebuild --clean
-  npx expo run
+  npx expo install --fix
+  npx expo start --reset-cache
+  npx expo install expo-asset (may still need to install some specific packages)
+  npx expo prebuild --platform android (to run on just android platform)
+  (alternatively npx expo prebuild --clean will rest both android and ios folders)
+  npx expo run:android
 
   # Minimum when switching Credentials
 

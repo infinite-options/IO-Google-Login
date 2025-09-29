@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.infiniteoptions.meetmeupapp'
+    namespace 'com.infiniteoptions.googleauthdemo'
     defaultConfig {
-        applicationId 'com.infiniteoptions.meetmeupapp'
+        applicationId 'com.infiniteoptions.googleauthdemo'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
