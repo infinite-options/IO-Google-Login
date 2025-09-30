@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Platform } from "react-native";
 import config from "../config";
 
-export default function LoginSuccess({ onNavigateToMap }) {
+export default function LoginSuccess({ onNavigateToMap, onNavigateToPhotoPicker, onLogout }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login Success!</Text>
@@ -28,8 +28,18 @@ export default function LoginSuccess({ onNavigateToMap }) {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onNavigateToMap}>
-        <Text style={styles.buttonText}>Go to Map</Text>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={onNavigateToMap}>
+          <Text style={styles.buttonText}>Go to Map</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.button, styles.photoButton]} onPress={onNavigateToPhotoPicker}>
+          <Text style={styles.buttonText}>Go to Photo Picker</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,9 +90,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    marginTop: 10,
+  },
   button: {
     backgroundColor: "#2196F3",
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 25,
     elevation: 3,
@@ -90,10 +106,34 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  photoButton: {
+    backgroundColor: "#34A853",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  logoutButton: {
+    backgroundColor: "#dc3545",
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    borderRadius: 25,
+    marginTop: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

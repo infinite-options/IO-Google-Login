@@ -5,6 +5,8 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-goo
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
 import LoginSuccess from "./screens/LoginSuccess";
+import PhotoPickerScreen from "./screens/PhotoPickerScreen";
+import GoogleApiService from "./services/googleApiService";
 import Constants from "expo-constants";
 import AppleSignIn from "./AppleSignIn";
 
@@ -14,13 +16,23 @@ console.log("App.js - Imported config:", config);
 export const mapsApiKey = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 const mapsApiKeyDisplay = mapsApiKey ? "..." + mapsApiKey.slice(-4) : "Not set";
 
+// App version and build info
+const APP_VERSION = "1.2.0";
+const BUILD_DATE = new Date().toISOString();
+const BUILD_TIMESTAMP = new Date().toLocaleString();
+
 export default function App() {
   console.log("------- Program Starting in App.js -------");
+  console.log("App Version:", APP_VERSION);
+  console.log("Build Date:", BUILD_DATE);
+  console.log("Build Timestamp:", BUILD_TIMESTAMP);
+
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
   const [appleAuthStatus, setAppleAuthStatus] = useState("Checking...");
   const [isInitializing, setIsInitializing] = useState(true);
   const [showMap, setShowMap] = useState(false);
+  const [showPhotoPicker, setShowPhotoPicker] = useState(false);
   const [mapError, setMapError] = useState(null);
 
   useEffect(() => {
@@ -49,11 +61,54 @@ export default function App() {
           androidClientId: config.googleClientIds.android,
           webClientId: config.googleClientIds.web,
           offlineAccess: true,
+          scopes: [
+            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/photoslibrary.readonly",
+            "https://www.googleapis.com/auth/photospicker.mediaitems.readonly",
+            "https://www.googleapis.com/auth/drive.readonly",
+          ],
         };
         console.log("Google Sign-In configuration:", googleConfig);
 
         await GoogleSignin.configure(googleConfig);
         console.log("Google Sign-In configured successfully");
+
+        // Check if user is already signed in and has valid tokens
+        const isSignedIn = await GoogleSignin.isSignedIn();
+        if (isSignedIn) {
+          try {
+            const userInfo = await GoogleSignin.getCurrentUser();
+            const tokens = await GoogleSignin.getTokens();
+
+            if (tokens.accessToken) {
+              await GoogleApiService.storeAccessToken(tokens.accessToken);
+              console.log("User already signed in, tokens restored");
+
+              // Test if the token has the right scopes
+              try {
+                const testResponse = await fetch("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + tokens.accessToken);
+                if (testResponse.ok) {
+                  console.log("Existing token is valid");
+                  if (isMounted) {
+                    setUserInfo(userInfo);
+                    setIsInitializing(false);
+                    return;
+                  }
+                } else {
+                  console.log("Existing token is invalid, signing out");
+                  await GoogleSignin.signOut();
+                }
+              } catch (error) {
+                console.log("Error testing existing token:", error);
+                await GoogleSignin.signOut();
+              }
+            }
+          } catch (error) {
+            console.log("Error checking existing sign-in:", error);
+            // Continue with sign out
+          }
+        }
 
         // Sign out any existing user on app start
         await GoogleSignin.signOut();
@@ -81,6 +136,7 @@ export default function App() {
     setUserInfo(userInfo);
     setError(null);
     setShowMap(false); // Reset map state when signing in
+    setShowPhotoPicker(false); // Reset photo picker state when signing in
   };
 
   const handleError = (errorMessage) => {
@@ -90,11 +146,65 @@ export default function App() {
   const signIn = async () => {
     try {
       console.log("Starting Google Sign-In process...");
+
+      // Force sign out first to clear any cached tokens
+      try {
+        await GoogleSignin.signOut();
+        console.log("Cleared existing session before sign-in");
+      } catch (signOutError) {
+        console.log("No existing session to clear:", signOutError.message);
+      }
+
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log("Sign-in successful:", userInfo);
       console.log("Sign-in successful:", userInfo.user);
       console.log("Sign-in successful:", userInfo.user.name);
+
+      // Get access tokens and store them in GoogleApiService
+      const tokens = await GoogleSignin.getTokens();
+      console.log("Access tokens received:", tokens);
+
+      if (tokens.accessToken) {
+        await GoogleApiService.storeAccessToken(tokens.accessToken);
+        console.log("Access token stored in GoogleApiService");
+
+        // Test the token with the new scopes
+        try {
+          const testResponse = await fetch("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + tokens.accessToken);
+          if (testResponse.ok) {
+            const userInfo = await testResponse.json();
+            console.log("Token test successful for user:", userInfo.email);
+
+            // Test token scopes specifically
+            try {
+              const tokenInfoResponse = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${tokens.accessToken}`);
+              if (tokenInfoResponse.ok) {
+                const tokenInfo = await tokenInfoResponse.json();
+                console.log("New token scopes:");
+                const scopes = tokenInfo.scope?.split(" ") || [];
+                scopes.forEach((scope, index) => {
+                  console.log(`  ${index + 1}. ${scope}`);
+                });
+                const hasPhotosScope = tokenInfo.scope?.includes("photoslibrary.readonly");
+                console.log("Has Photos scope:", hasPhotosScope);
+                if (!hasPhotosScope) {
+                  console.warn("⚠️ WARNING: New token still missing photoslibrary.readonly scope!");
+                } else {
+                  console.log("✅ SUCCESS: All required scopes present!");
+                }
+              }
+            } catch (scopeError) {
+              console.log("Could not check token scopes:", scopeError);
+            }
+          } else {
+            console.log("Token test failed:", testResponse.status);
+          }
+        } catch (error) {
+          console.log("Token test error:", error.message);
+        }
+      }
+
       handleSignIn(userInfo);
     } catch (error) {
       console.error("Sign-in error:", error);
@@ -106,6 +216,7 @@ export default function App() {
     try {
       console.log("Signing out...");
       await GoogleSignin.signOut();
+      await GoogleApiService.signOut(); // Also clear tokens from GoogleApiService
       console.log("Sign-out successful");
       setUserInfo(null);
       setError(null);
@@ -158,11 +269,23 @@ export default function App() {
     try {
       console.log("Navigating to map set to true...");
       setShowMap(true);
+      setShowPhotoPicker(false);
     } catch (error) {
       console.error("Error navigating to map:", error);
       setMapError(error.message);
       setShowMap(false);
       Alert.alert("Map Error", "There was an error loading the map. Please try again later.", [{ text: "OK" }]);
+    }
+  }, []);
+
+  const handleNavigateToPhotoPicker = useCallback(() => {
+    try {
+      console.log("Navigating to photo picker set to true...");
+      setShowPhotoPicker(true);
+      setShowMap(false);
+    } catch (error) {
+      console.error("Error navigating to photo picker:", error);
+      Alert.alert("Photo Picker Error", "There was an error loading the photo picker. Please try again later.", [{ text: "OK" }]);
     }
   }, []);
 
@@ -184,6 +307,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {/* Version Info Header */}
+      <View style={styles.versionContainer}>
+        <Text style={styles.versionText}>v{APP_VERSION}</Text>
+        <Text style={styles.buildText}>{BUILD_TIMESTAMP}</Text>
+      </View>
+
       {!userInfo ? (
         <>
           <Text style={styles.title}>Sign In</Text>
@@ -206,9 +335,14 @@ export default function App() {
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text>Welcome {userInfo?.user?.name || "User"}</Text>
-            <TouchableOpacity style={styles.backButton} onPress={() => setShowMap(false)}>
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
+            <View style={styles.headerButtons}>
+              <TouchableOpacity style={styles.backButton} onPress={() => setShowMap(false)}>
+                <Text style={styles.backButtonText}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
+                <Text style={styles.logoutButtonText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {mapError ? (
             <View style={styles.errorContainer}>
@@ -227,8 +361,10 @@ export default function App() {
             <MapScreen onLogout={signOut} onError={handleMapError} />
           )}
         </View>
+      ) : showPhotoPicker ? (
+        <PhotoPickerScreen onBack={() => setShowPhotoPicker(false)} userInfo={userInfo} onLogout={signOut} />
       ) : (
-        <LoginSuccess onNavigateToMap={handleNavigateToMap} mapError={mapError} />
+        <LoginSuccess onNavigateToMap={handleNavigateToMap} onNavigateToPhotoPicker={handleNavigateToPhotoPicker} onLogout={signOut} mapError={mapError} />
       )}
     </View>
   );
@@ -240,6 +376,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  versionContainer: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    zIndex: 1000,
+  },
+  versionText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  buildText: {
+    color: "white",
+    fontSize: 10,
+    opacity: 0.8,
   },
   title: {
     fontSize: 24,
@@ -266,6 +422,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#fff",
   },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   apiKeysContainer: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 10,
@@ -289,6 +450,16 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: "#333",
     fontSize: 16,
+  },
+  logoutButton: {
+    padding: 10,
+    backgroundColor: "#dc3545",
+    borderRadius: 5,
+  },
+  logoutButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
   errorContainer: {
     flex: 1,
