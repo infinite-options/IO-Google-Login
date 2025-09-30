@@ -1,12 +1,55 @@
 import "./polyfills";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View, Platform, ActivityIndicator, Alert, TouchableOpacity } from "react-native";
-import { GoogleSignin, GoogleSigninButton, statusCodes } from "@react-native-google-signin/google-signin";
+// Conditionally import Google Sign-In based on platform
+let GoogleSignin, GoogleSigninButton, statusCodes;
+if (Platform.OS !== "web") {
+  const googleSignInModule = require("@react-native-google-signin/google-signin");
+  GoogleSignin = googleSignInModule.GoogleSignin;
+  GoogleSigninButton = googleSignInModule.GoogleSigninButton;
+  statusCodes = googleSignInModule.statusCodes;
+} else {
+  // Mock components for web
+  GoogleSignin = {
+    configure: () => Promise.resolve(),
+    signIn: () => Promise.resolve({ user: { name: "Web User" } }),
+    signOut: () => Promise.resolve(),
+    isSignedIn: () => Promise.resolve(false),
+    getCurrentUser: () => Promise.resolve(null),
+    getTokens: () => Promise.resolve({ accessToken: null }),
+    hasPlayServices: () => Promise.resolve(true),
+  };
+  GoogleSigninButton = ({ onPress, style, ...props }) => (
+    <TouchableOpacity style={[styles.googleButton, style]} onPress={onPress}>
+      <Text style={styles.googleButtonText}>Sign in with Google (Web)</Text>
+    </TouchableOpacity>
+  );
+  GoogleSigninButton.Size = {
+    Wide: "Wide",
+    Standard: "Standard",
+    Icon: "Icon",
+  };
+  GoogleSigninButton.Color = {
+    Dark: "Dark",
+    Light: "Light",
+  };
+  statusCodes = {};
+}
 import config from "./config";
 import MapScreen from "./screens/MapScreen";
 import LoginSuccess from "./screens/LoginSuccess";
 import PhotoPickerScreen from "./screens/PhotoPickerScreen";
+
+// Import web-compatible components
+let MapScreenComponent;
+try {
+  MapScreenComponent = Platform.OS === "web" ? require("./screens/MapScreen.web.js").default : MapScreen;
+} catch (error) {
+  console.error("Error loading MapScreen component:", error);
+  MapScreenComponent = MapScreen;
+}
 import GoogleApiService from "./services/googleApiService";
+import GoogleSignInWeb from "./services/googleSignInWeb";
 import Constants from "expo-constants";
 import AppleSignIn from "./AppleSignIn";
 
@@ -26,6 +69,7 @@ export default function App() {
   console.log("App Version:", APP_VERSION);
   console.log("Build Date:", BUILD_DATE);
   console.log("Build Timestamp:", BUILD_TIMESTAMP);
+  console.log("Platform:", Platform.OS);
 
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -71,15 +115,22 @@ export default function App() {
         };
         console.log("Google Sign-In configuration:", googleConfig);
 
-        await GoogleSignin.configure(googleConfig);
-        console.log("Google Sign-In configured successfully");
+        // Use web-specific implementation for web platform
+        if (Platform.OS === "web") {
+          await GoogleSignInWeb.configure(googleConfig);
+          console.log("Google Sign-In configured for web");
+        } else {
+          await GoogleSignin.configure(googleConfig);
+          console.log("Google Sign-In configured for mobile");
+        }
 
         // Check if user is already signed in and has valid tokens
-        const isSignedIn = await GoogleSignin.isSignedIn();
+        const googleSignIn = Platform.OS === "web" ? GoogleSignInWeb : GoogleSignin;
+        const isSignedIn = await googleSignIn.isSignedIn();
         if (isSignedIn) {
           try {
-            const userInfo = await GoogleSignin.getCurrentUser();
-            const tokens = await GoogleSignin.getTokens();
+            const userInfo = await googleSignIn.getCurrentUser();
+            const tokens = await googleSignIn.getTokens();
 
             if (tokens.accessToken) {
               await GoogleApiService.storeAccessToken(tokens.accessToken);
@@ -97,11 +148,11 @@ export default function App() {
                   }
                 } else {
                   console.log("Existing token is invalid, signing out");
-                  await GoogleSignin.signOut();
+                  await googleSignIn.signOut();
                 }
               } catch (error) {
                 console.log("Error testing existing token:", error);
-                await GoogleSignin.signOut();
+                await googleSignIn.signOut();
               }
             }
           } catch (error) {
@@ -111,7 +162,7 @@ export default function App() {
         }
 
         // Sign out any existing user on app start
-        await GoogleSignin.signOut();
+        await googleSignIn.signOut();
         if (isMounted) {
           setUserInfo(null);
           setIsInitializing(false);
@@ -147,22 +198,26 @@ export default function App() {
     try {
       console.log("Starting Google Sign-In process...");
 
+      const googleSignIn = Platform.OS === "web" ? GoogleSignInWeb : GoogleSignin;
+
       // Force sign out first to clear any cached tokens
       try {
-        await GoogleSignin.signOut();
+        await googleSignIn.signOut();
         console.log("Cleared existing session before sign-in");
       } catch (signOutError) {
         console.log("No existing session to clear:", signOutError.message);
       }
 
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
+      if (Platform.OS !== "web") {
+        await googleSignIn.hasPlayServices();
+      }
+      const userInfo = await googleSignIn.signIn();
       console.log("Sign-in successful:", userInfo);
       console.log("Sign-in successful:", userInfo.user);
       console.log("Sign-in successful:", userInfo.user.name);
 
       // Get access tokens and store them in GoogleApiService
-      const tokens = await GoogleSignin.getTokens();
+      const tokens = await googleSignIn.getTokens();
       console.log("Access tokens received:", tokens);
 
       if (tokens.accessToken) {
@@ -215,7 +270,8 @@ export default function App() {
   const signOut = async () => {
     try {
       console.log("Signing out...");
-      await GoogleSignin.signOut();
+      const googleSignIn = Platform.OS === "web" ? GoogleSignInWeb : GoogleSignin;
+      await googleSignIn.signOut();
       await GoogleApiService.signOut(); // Also clear tokens from GoogleApiService
       console.log("Sign-out successful");
       setUserInfo(null);
@@ -301,6 +357,8 @@ export default function App() {
       <View style={styles.container}>
         <ActivityIndicator size='large' color='#0000ff' />
         <Text style={styles.loadingText}>Initializing...</Text>
+        <Text style={styles.debugText}>Platform: {Platform.OS}</Text>
+        <Text style={styles.debugText}>Version: {APP_VERSION}</Text>
       </View>
     );
   }
@@ -318,7 +376,7 @@ export default function App() {
           <Text style={styles.title}>Sign In</Text>
           {error && <Text style={styles.error}>Error: {error}</Text>}
           <GoogleSigninButton style={styles.googleButton} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={signIn} />
-          <AppleSignIn onSignIn={handleSignIn} onError={handleError} />
+          {Platform.OS !== "web" && <AppleSignIn onSignIn={handleSignIn} onError={handleError} />}
 
           <View style={styles.apiKeysContainer}>
             <Text style={styles.apiKeysTitle}>API Keys (First 4 Digits):</Text>
@@ -358,7 +416,7 @@ export default function App() {
               </TouchableOpacity>
             </View>
           ) : (
-            <MapScreen onLogout={signOut} onError={handleMapError} />
+            <MapScreenComponent onLogout={signOut} onError={handleMapError} />
           )}
         </View>
       ) : showPhotoPicker ? (
@@ -406,6 +464,15 @@ const styles = StyleSheet.create({
     width: 192,
     height: 48,
     marginTop: 20,
+    backgroundColor: "#4285F4",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  googleButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
   },
   error: {
     color: "red",
@@ -441,6 +508,11 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
+  },
+  debugText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: "#666",
   },
   backButton: {
     padding: 10,

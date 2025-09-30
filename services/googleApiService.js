@@ -1,6 +1,22 @@
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Linking, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Conditionally import Google Sign-In based on platform
+let GoogleSignin;
+if (Platform.OS !== "web") {
+  GoogleSignin = require("@react-native-google-signin/google-signin").GoogleSignin;
+} else {
+  // Mock GoogleSignin for web
+  GoogleSignin = {
+    configure: () => Promise.resolve(),
+    signIn: () => Promise.resolve({ user: { name: "Web User" } }),
+    signOut: () => Promise.resolve(),
+    isSignedIn: () => Promise.resolve(false),
+    getCurrentUser: () => Promise.resolve(null),
+    getTokens: () => Promise.resolve({ accessToken: null }),
+    hasPlayServices: () => Promise.resolve(true),
+  };
+}
 
 // Types for TypeScript-like documentation
 /**

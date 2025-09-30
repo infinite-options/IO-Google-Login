@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from "react-native";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Platform } from "react-native";
+
+// Conditionally import Google Sign-In based on platform
+let GoogleSignin;
+if (Platform.OS !== "web") {
+  GoogleSignin = require("@react-native-google-signin/google-signin").GoogleSignin;
+} else {
+  // Mock GoogleSignin for web
+  GoogleSignin = {
+    signOut: () => Promise.resolve(),
+  };
+}
 import GoogleApiService from "../services/googleApiService";
 
 export default function PhotoPickerTest({ onBack, userInfo }) {

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, ScrollView, TouchableOpacity, Text, View, Alert, ActivityIndicator, Image, Dimensions } from "react-native";
 import GoogleApiService from "../services/googleApiService";
+import { Platform } from "react-native";
 import PhotoPickerWebView from "./PhotoPickerWebView";
+
+// Use web-compatible WebView for web platform
+const PhotoPickerWebViewComponent = Platform.OS === "web" ? require("./PhotoPickerWebView.web.js").default : PhotoPickerWebView;
 import PhotoPickerTest from "./PhotoPickerTest";
 
 const { width } = Dimensions.get("window");
@@ -217,7 +221,7 @@ export default function PhotoPickerScreen({ onBack, userInfo, onLogout }) {
   }
 
   if (showWebViewPicker) {
-    return <PhotoPickerWebView onPhotosSelected={handlePhotosSelected} onClose={handleCloseWebView} userInfo={userInfo} />;
+    return <PhotoPickerWebViewComponent onPhotosSelected={handlePhotosSelected} onClose={handleCloseWebView} userInfo={userInfo} />;
   }
 
   if (showTestScreen) {

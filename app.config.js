@@ -58,6 +58,14 @@ module.exports = ({ config: expoConfig }) => ({
     },
     web: {
       favicon: "./assets/favicon.png",
+      name: "IO Google Login Web",
+      shortName: "IO Google Login",
+      description: "Google Sign-In and Photo Picker Demo App",
+      themeColor: "#4285F4",
+      backgroundColor: "#ffffff",
+      startUrl: "/",
+      display: "standalone",
+      orientation: "portrait",
     },
     scheme: process.env.EXPO_PUBLIC_GOOGLE_URL_SCHEME,
     plugins: [
